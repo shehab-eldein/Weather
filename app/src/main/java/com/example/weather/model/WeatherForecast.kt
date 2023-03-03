@@ -57,10 +57,7 @@ data class Alert (var senderName: String,
                   var description: String,
                   var tags: List<String>)
 
-data class Settings(var language:Boolean,
-                    var unit:Int,
-                    var location:Int,
-                    var notification:Boolean)
+
 
 @Entity(primaryKeys = arrayOf("lat", "lon"), tableName = "addresses")
 data class WeatherAddress(var address:String,

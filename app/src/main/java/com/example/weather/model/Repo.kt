@@ -3,7 +3,6 @@ package com.example.weather.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.safyweather.Constants
 import com.example.weather.networking.NetworkingManager
 import com.google.gson.Gson
@@ -88,19 +87,19 @@ class Repo(var networkingManager: NetworkingManager,
     }
     */
 
-      fun addSettingsToSharedPreferences(settings: Settings) {
+      fun addSettingsToSharedPreferences(setting: Setting) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
-        var settingStr = gson.toJson(settings)
+        var settingStr = gson.toJson(setting)
         prefEditor.putString(Constants.MY_SETTINGS_PREFS,settingStr)
         prefEditor.commit()
     }
 
-      fun getSettingsSharedPreferences(): Settings? {
+      fun getSettingsSharedPreferences(): Setting? {
         var settingStr = sharedPreferences.getString(Constants.MY_SETTINGS_PREFS,"")
         var gson= Gson()
-        var settingsObj:Settings? = gson.fromJson(settingStr,Settings::class.java)
-        return settingsObj
+        var settingObj:Setting? = gson.fromJson(settingStr,Setting::class.java)
+        return settingObj
     }
 
       fun addWeatherToSharedPreferences(weather: WeatherForecast) {

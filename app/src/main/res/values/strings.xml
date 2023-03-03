@@ -52,4 +52,11 @@
     <string name="sorry">Sorry cannot save this alarm! you should enable the notifications</string>
     <string name="networkWarning">please, check your network!</string>
     <string name="google_maps_key">AIzaSyDoedG1Y17WiQCwp_shI0nx2U0_vkpF_9M</string>
+    <string name="getCurrentLocation">Current Location</string>
+    <string name="openMap">Open Map</string>
+    <string name="GO">Go</string>
+    <string name="start">Start</string>
+    <string name="getWeather">Get Weather Of ?</string>
+    <string name="anotherLocation">Another Location</string>
+    <string name="GetWatherOf">Get Weather of ?</string>
 </resources>

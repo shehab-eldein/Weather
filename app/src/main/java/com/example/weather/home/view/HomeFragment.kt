@@ -1,6 +1,8 @@
 package com.example.weather.home.view
 
 import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
@@ -22,13 +25,14 @@ import com.example.weather.model.Repo
 import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
+import java.util.*
 
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment() {
     /*
 
-    val locationArgs:HomeFragmentArgs by navArgs()
+
     private var settings: Settings? = null
     var connectivity : ConnectivityManager? = null
     var info : NetworkInfo? = null
@@ -41,7 +45,7 @@ class HomeFragment : Fragment() {
     lateinit var layoutManagerDaily: LinearLayoutManager
     lateinit var viewModel: ViewModelHome
     lateinit var factory: MyFactory
-
+    val latLongArgs:HomeFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +54,7 @@ class HomeFragment : Fragment() {
          viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
 
         GlobalScope.launch (Dispatchers.Main){
-            val weather = viewModel.getWeather()
+            val weather = viewModel.getWeather(latLongArgs.lat.toDouble(),latLongArgs.longtuide.toDouble())
             Log.i(TAG, "onCreate:Enter ${weather.hourly[0].weather} ")
             updateUI(weather)
             initRecycler()
@@ -79,7 +83,9 @@ class HomeFragment : Fragment() {
 
     fun updateUI(weather: WeatherForecast?){
         weather as WeatherForecast
-        binding.currCity.text = weather.timezone
+       // binding.currCity.text =   weather.timezone
+        binding.currCity.text = getAddressFromLatLng(latLongArgs.lat.toDouble(),latLongArgs.longtuide.toDouble())
+
         binding.currDate.text = Formmater.getDateFormat(weather.current.dt)
         binding.currTime.text = Formmater.getTimeFormat(weather.current.dt)
         binding.currTemp.text = weather.current.temp.toString()
@@ -107,6 +113,16 @@ class HomeFragment : Fragment() {
         binding.dailyRecycler.adapter = dailyAdapter
         binding.hourlyRecycler.layoutManager = layoutManagerHourly
         binding.dailyRecycler.layoutManager = layoutManagerDaily
+    }
+    fun getAddressFromLatLng(lat:Double,longg:Double) : String{
+       // Locale.setDefault(Locale("ar"))
+        var geocoder = Geocoder(context as Context, Locale.getDefault())
+        var addresses:List<Address>
+        addresses = geocoder.getFromLocation(lat,longg,1) as List<Address>
+        if(addresses.size>0) {
+            return " ${addresses.get(0).subAdminArea},${addresses.get(0).adminArea} ,${addresses.get(0).countryName}  "
+        }
+        return ""
     }
 
 

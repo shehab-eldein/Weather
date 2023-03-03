@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment2">
+    app:startDestination="@id/introFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -18,5 +18,33 @@
         android:id="@+id/homeFragment2"
         android:name="com.example.weather.home.view.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <argument
+            android:name="lat"
+            app:argType="float" />
+        <argument
+            android:name="longtuide"
+            app:argType="float" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.example.weather.Intro.IntroFragment"
+        android:label="fragment_intro"
+        tools:layout="@layout/fragment_intro" >
+        <action
+            android:id="@+id/action_introFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_homeFragment2"
+            app:destination="@id/homeFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.weather.map.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_homeFragment2"
+            app:destination="@id/homeFragment2" />
+    </fragment>
 </navigation>

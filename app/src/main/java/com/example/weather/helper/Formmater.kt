@@ -37,13 +37,15 @@ class Formmater {
 
         fun getTimeFormat(dtInTimeStamp: Int): String {
 
-            var currentTime: Date = Date(dtInTimeStamp.toLong() * 1000)
-            var timeFormat: SimpleDateFormat = SimpleDateFormat("HH:mm")
+            var currentTime = Date(dtInTimeStamp.toLong() * 1000)
+            // TODO: formate to 12H not 24H
+            var timeFormat = SimpleDateFormat("HH:mm")
             var formatedTime: String = timeFormat.format(currentTime)
 
             return formatedTime
 
         }
     }
+
 
 }

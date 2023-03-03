@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import com.example.weather.databinding.FragmentSplashBinding
-import com.example.weather.model.Settings
+import com.example.weather.model.Setting
 import com.example.weather.model.WeatherForecast
 
 
@@ -15,7 +15,7 @@ class SplashFragment : Fragment() {
     private lateinit var binding: FragmentSplashBinding
     private lateinit var navController: NavController
     private var currentWeather: WeatherForecast? = null
-    private var settings: Settings? = null
+    private var setting: Setting? = null
     //private lateinit var repo:RepositoryInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {

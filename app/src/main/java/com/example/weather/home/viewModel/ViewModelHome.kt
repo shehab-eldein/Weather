@@ -10,10 +10,11 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "ViewModelHome"
 class ViewModelHome(var _repo: Repo): ViewModel() {
-    suspend fun getWeather(): WeatherForecast{
+
+    suspend fun getWeather(lat: Double,long:Double): WeatherForecast{
         var weather:WeatherForecast? = null
         val job =viewModelScope.launch(Dispatchers.IO) {
-           weather = _repo.getCurrentWeatherWithLocationInRepo(44.34,10.99, "metric")
+           weather = _repo.getCurrentWeatherWithLocationInRepo(lat,long,"metric")
 
         }
         job.join()
