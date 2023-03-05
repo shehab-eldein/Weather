@@ -26,6 +26,8 @@ import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
 import java.util.*
+import androidx.navigation.Navigation.findNavController
+import com.example.weather.helper.CurrentUser
 
 
 private const val TAG = "HomeFragment"
@@ -45,16 +47,17 @@ class HomeFragment : Fragment() {
     lateinit var layoutManagerDaily: LinearLayoutManager
     lateinit var viewModel: ViewModelHome
     lateinit var factory: MyFactory
-    val latLongArgs:HomeFragmentArgs by navArgs()
+   // val latLongArgs: HomeFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
          factory = MyFactory( Repo(NetworkingManager.getInstance(),requireContext(),requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
          viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
 
         GlobalScope.launch (Dispatchers.Main){
-            val weather = viewModel.getWeather(latLongArgs.lat.toDouble(),latLongArgs.longtuide.toDouble())
+           val weather = viewModel.getWeather(CurrentUser.lat,CurrentUser.long)
             Log.i(TAG, "onCreate:Enter ${weather.hourly[0].weather} ")
             updateUI(weather)
             initRecycler()
@@ -84,7 +87,7 @@ class HomeFragment : Fragment() {
     fun updateUI(weather: WeatherForecast?){
         weather as WeatherForecast
        // binding.currCity.text =   weather.timezone
-        binding.currCity.text = getAddressFromLatLng(latLongArgs.lat.toDouble(),latLongArgs.longtuide.toDouble())
+        binding.currCity.text = getAddressFromLatLng(CurrentUser.lat,CurrentUser.long)
 
         binding.currDate.text = Formmater.getDateFormat(weather.current.dt)
         binding.currTime.text = Formmater.getTimeFormat(weather.current.dt)

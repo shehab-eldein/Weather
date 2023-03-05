@@ -29,22 +29,21 @@ class Repo(var networkingManager: NetworkingManager,
       suspend fun getCurrentWeatherWithLocationInRepo(lat:Double, long:Double, unit:String): WeatherForecast {
         Log.i(TAG, "getCurrentWeatherWithLocationInRepoooooooooooooo: ")
 
-         /*
+
         if(getSettingsSharedPreferences()?.language as Boolean){
 
-            var weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit,arrayOfLangs[0])
+            var weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.en.langValue)
             Log.i(TAG, "getCurrentWeatherWithLocationInRepo: ${weatherinrepo.current.weather[0].description} ")
             return weatherinrepo
         }
 
-          */
-
-        var weatherinrepo2 = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.en.toString())
+          var weatherinrepo2 = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.ar.langValue)
         Log.i("TAG", "getCurrentWeatherWithLocationInRepo: ${weatherinrepo2.current.weather[0].description} ")
         return weatherinrepo2
     }
 
 
+    //***************************** ROOM *****************************************
     /*
      val storedAddresses: LiveData<List<WeatherAddress>>
         get() = localSource.getAllAddresses()
@@ -87,12 +86,14 @@ class Repo(var networkingManager: NetworkingManager,
     }
     */
 
+    //************************* SHARED PREFRENCE **********************************************
       fun addSettingsToSharedPreferences(setting: Setting) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
         var settingStr = gson.toJson(setting)
         prefEditor.putString(Constants.MY_SETTINGS_PREFS,settingStr)
         prefEditor.commit()
+        Log.i(TAG, "addSettingsToSharedPreferences: Done")
     }
 
       fun getSettingsSharedPreferences(): Setting? {

@@ -8,15 +8,15 @@ object Constants {
     const val MY_CURRENT_WEATHER_OBJ = "currentWeatherSP"
     const val MY_SETTINGS_PREFS = "SettingsSP"
 
-    enum class units {
-        standard,
-        metric,
-        imperial
+    enum class units(val unitsValue: Int) {
+        standard (0),
+        metric (1),
+        imperial(2)
     }
 
-    enum class languages {
-        en,
-        ar
+    enum class languages(val langValue: String) {
+        en ("en"),
+        ar("ar")
     }
 
     const val weatherKey = ""

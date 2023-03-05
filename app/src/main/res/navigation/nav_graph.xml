@@ -3,28 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/introFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.weather.SplashFragment"
+        android:name="com.example.weather.splash.SplashFragment"
         android:label="fragment_splash2"
         tools:layout="@layout/fragment_splash" >
         <action
+            android:id="@+id/action_splashFragment_to_introFragment"
+            app:destination="@id/introFragment" />
+        <action
             android:id="@+id/action_splashFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
-    </fragment>
-    <fragment
-        android:id="@+id/homeFragment2"
-        android:name="com.example.weather.home.view.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <argument
-            android:name="lat"
-            app:argType="float" />
-        <argument
-            android:name="longtuide"
-            app:argType="float" />
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -36,7 +27,7 @@
             app:destination="@id/mapFragment" />
         <action
             android:id="@+id/action_introFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -45,6 +36,23 @@
         tools:layout="@layout/fragment_map" >
         <action
             android:id="@+id/action_mapFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
+            app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment2"
+        android:name="com.example.weather.settings.view.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment2_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_settingsFragment2_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.weather.home.view.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>
