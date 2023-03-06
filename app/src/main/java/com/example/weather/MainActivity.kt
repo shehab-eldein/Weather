@@ -1,14 +1,12 @@
 package com.example.weather
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
@@ -33,12 +31,19 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.dashBoardContainer) as NavHostFragment
         navController = navHostFragment.findNavController()
         bottomChip.setItemSelected(R.id.homeBtn)
-        bottomChip.setOnItemSelectedListener {id->
-            if (id == R.id.homeBtn) {
-                supportFragmentManager.beginTransaction().replace(R.id.dashBoardContainer,HomeFragment()).commit()
-            } else {
-                supportFragmentManager.beginTransaction().replace(R.id.dashBoardContainer,SettingsFragment()).commit()
+        bottomChip.setOnItemSelectedListener { id->
+
+            when(id) {
+                 R.id.homeBtn ->
+                     findNavController(this@MainActivity, R.id.dashBoardContainer).navigate(R.id.homeFragment)
+
+                R.id.favBtn ->
+                    findNavController(this@MainActivity, R.id.dashBoardContainer).navigate(R.id.favoriteFragment)
+
+                else ->
+                    findNavController(this@MainActivity, R.id.dashBoardContainer).navigate(R.id.settingsFragment2)
             }
+
 
         }
         handelNavigationVisual()

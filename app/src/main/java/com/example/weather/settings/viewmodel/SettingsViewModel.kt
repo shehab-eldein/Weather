@@ -1,6 +1,7 @@
 package com.example.weather.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting
 
@@ -11,5 +12,6 @@ class SettingsViewModel (private val repo: Repo):ViewModel(){
     }
     fun getStoredSettings(): Setting?{
         return repo.getSettingsSharedPreferences()
+
     }
 }

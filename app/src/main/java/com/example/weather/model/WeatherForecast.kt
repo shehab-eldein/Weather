@@ -59,17 +59,4 @@ data class Alert (var senderName: String,
 
 
 
-@Entity(primaryKeys = arrayOf("lat", "lon"), tableName = "addresses")
-data class WeatherAddress(var address:String,
-                          @NonNull
-                          var lat:Double,
-                          @NonNull
-                          var lon:Double)
 
-@Entity(tableName = "alerts")
-data class AlertData(var fromDate:Date,
-                     var toDate:Date,
-                     var notifyType:Boolean = true){
-    @PrimaryKey(autoGenerate = true)
-    var pKey:Int = 0
-}

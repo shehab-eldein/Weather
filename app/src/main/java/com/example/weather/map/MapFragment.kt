@@ -10,10 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
+import com.example.safyweather.Constants
 import com.example.weather.R
+import com.example.weather.db.DBManager
+import com.example.weather.helper.CurrentUser
+import com.example.weather.helper.LocalityManager
+import com.example.weather.model.Repo
+import com.example.weather.networking.NetworkingManager
+import com.example.weather.settings.view.SettingsFragmentDirections
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,9 +33,11 @@ import java.util.*
 class MapFragment : Fragment() {
 
     private lateinit var navController: NavController
-   // private lateinit var favViewModelFactory:FavoriteViewModelFactory
-   // private lateinit var favViewModel:FavoriteViewModel
-   // private val fragmentType:MapFragmentArgs by navArgs()
+
+    // private lateinit var favViewModelFactory:FavoriteViewModelFactory
+    // private lateinit var favViewModel:FavoriteViewModel
+    private val args: MapFragmentArgs by navArgs()
+    private lateinit var repo: Repo
 
     // TODO: duplicated setting object we need setting class
     private var setting: com.example.weather.model.Setting? = null
@@ -37,11 +46,21 @@ class MapFragment : Fragment() {
         onMapClicked(googleMap)
 
 
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
+        repo = Repo.getInstance(
+            NetworkingManager.getInstance(), DBManager(requireContext()), requireContext(),
+            requireContext().getSharedPreferences(
+                Constants.MY_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE
+            )
+        )
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
@@ -49,22 +68,30 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-      //  navController = Navigation.findNavController(activity as AppCompatActivity, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.dashBoardContainer)
     }
 
-    fun moveCamera(map:GoogleMap, location: LatLng = LatLng(30.128430, 31.323850)) {
+    fun moveCamera(
+        map: GoogleMap,
+        location: LatLng = LatLng(
+            CurrentUser.location.latitude,
+            CurrentUser.location.longitude
+        )
+    ) {
         map.addMarker(MarkerOptions().position(location))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location,15f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
 
     }
+
     fun onMapClicked(map: GoogleMap) {
-        map.setOnMapClickListener{
+        map.setOnMapClickListener {
             //get clicked lat and long adress name to put it in favorite
-            var addressName = getAddressFromLatLng(it.latitude,it.longitude)
+            var addressName =
+                LocalityManager.getAddressFromLatLng(requireContext(), it.latitude, it.longitude)
 
             //clear all marker
             map.clear()
-            moveCamera(map,LatLng(it.latitude, it.longitude))
+            moveCamera(map, LatLng(it.latitude, it.longitude))
 
 
             // TODO:  Duplicated alertDialog make in seperate class
@@ -73,23 +100,37 @@ class MapFragment : Fragment() {
                 .setCancelable(false)
                 .setPositiveButton(getString(R.string.save)) { dialog, id ->
                     //there ara another argument here
-                   // val action =  MapFragmentDirections.actionMapFragmentToHomeFragment2(it.latitude.toFloat(),it.longitude.toFloat(),)
-                    //navController.navigate(action)
+                    nextDestination(it)
                     dialog.cancel()
                 }
-                .setNegativeButton(getString(R.string.cancel)) {dialog, id -> dialog.cancel()}
+                .setNegativeButton(getString(R.string.cancel)) { dialog, id -> dialog.cancel() }
             val alert = dialogBuilder.create()
             alert.show()
         }
     }
-    fun getAddressFromLatLng(lat:Double,longg:Double) : String{
-        var geocoder = Geocoder(context as Context, Locale.getDefault())
-        var addresses:List<Address>
 
-        addresses = geocoder.getFromLocation(lat,longg,1) as List<Address>
-        if(addresses.size>0) {
-            return addresses.get(0).getAddressLine(0)
+    fun nextDestination(loc: LatLng) {
+        repo.add_LatLongToSP(loc)
+        if (args.isHome) {
+            CurrentUser.location = loc
+            // TODO: Remove current user and use args
+            val action = MapFragmentDirections.actionMapFragmentToHomeFragment2()
+            navController.navigate(action)
+            //Navigation.findNavController(requireActivity(), R.id.dashBoardContainer).navigate(R.id.homeFragment)
+        } else {
+            val action = MapFragmentDirections.actionMapFragmentToFavoriteFragment()
+                .setLongt(loc.longitude.toFloat())
+                .setLat(loc.latitude.toFloat())
+                .setName(
+                    LocalityManager.getAddressFromLatLng(
+                        requireContext(),
+                        loc.latitude,
+                        loc.longitude
+                    )
+                )
+            navController.navigate(action)
         }
-        return ""
+
+
     }
 }

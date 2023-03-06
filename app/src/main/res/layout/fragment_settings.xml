@@ -34,16 +34,21 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/arabicLang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/arabic"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textColorHighlight="@color/mySecondaryColor"
+            android:textColorLink="@color/mySecondaryColor"
+            android:textSize="18sp" />
+
         <RadioButton
             android:id="@+id/englishLang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/english"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <TextView
@@ -69,16 +74,19 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/GPS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/gps"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
         <RadioButton
             android:id="@+id/map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/maps"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <TextView
@@ -104,9 +112,10 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/standardUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/standard"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,9 +129,10 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/metricUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/metric"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,9 +146,10 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/imperialUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/imperial"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -172,16 +183,19 @@ tools:context=".settings.view.SettingsFragment">
             android:id="@+id/notiEnable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/enabled"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
         <RadioButton
             android:id="@+id/notiDisable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/material_dynamic_neutral70"
             android:text="@string/disabled"
-            android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </RadioGroup>
 
 </LinearLayout>

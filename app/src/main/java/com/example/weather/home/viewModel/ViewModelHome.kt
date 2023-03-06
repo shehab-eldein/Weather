@@ -1,10 +1,13 @@
 package com.example.weather.home.viewModel
 
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.model.Repo
+import com.example.weather.model.Setting
 import com.example.weather.model.WeatherForecast
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,7 +28,35 @@ class ViewModelHome(var _repo: Repo): ViewModel() {
         return weather as WeatherForecast
 
     }
+    /*
+
+    fun getLocationSP() :LatLng? {
+       var location = _repo.get_LatLongSP()
+        return  location
+    }
+    fun getStoredSettings(): Setting?{
+        return _repo.getSettingsSharedPreferences()
+    }
+
+    fun getStoredCurrentWeather(): WeatherForecast?{
+        return _repo.getWeatherSharedPreferences()
+    }
+
+    fun addWeatherInVM(weather: WeatherForecast){
+        _repo.addWeatherToSharedPreferences(weather)
+    }
+
+    fun updateWeatherPrefs(owner: LifecycleOwner){
+        Log.i("TAG", "upppppppppppppddddddddaaaaaaaaatttttttee on view model")
+        getWholeWeather(_repo.getWeatherSharedPreferences()?.lat as Double,_repo.getWeatherSharedPreferences()?.lon as Double,"metric")
+        weatherFromNetwork.observe(owner){
+            repo.addWeatherToSharedPreferences(it)
+        }
+    }
+
+     */
 }
+
 /*
  var repo: Repo = Repo(
             NetworkingManager.getInstance(),requireContext(), requireContext().getSharedPreferences (

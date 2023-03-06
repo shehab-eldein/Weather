@@ -10,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.safyweather.Constants
 import com.example.weather.R
 import com.example.weather.databinding.FragmentHomeBinding
+import com.example.weather.db.DBManager
 import com.example.weather.helper.Formmater
 import com.example.weather.home.viewModel.MyFactory
 import com.example.weather.home.viewModel.ViewModelHome
@@ -26,8 +26,8 @@ import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
 import java.util.*
-import androidx.navigation.Navigation.findNavController
 import com.example.weather.helper.CurrentUser
+import com.example.weather.helper.LocalityManager
 
 
 private const val TAG = "HomeFragment"
@@ -47,20 +47,23 @@ class HomeFragment : Fragment() {
     lateinit var layoutManagerDaily: LinearLayoutManager
     lateinit var viewModel: ViewModelHome
     lateinit var factory: MyFactory
+
    // val latLongArgs: HomeFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-         factory = MyFactory( Repo(NetworkingManager.getInstance(),requireContext(),requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
+         factory = MyFactory( Repo(NetworkingManager.getInstance(),
+             DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
          viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
 
         GlobalScope.launch (Dispatchers.Main){
-           val weather = viewModel.getWeather(CurrentUser.lat,CurrentUser.long)
+           val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
             Log.i(TAG, "onCreate:Enter ${weather.hourly[0].weather} ")
             updateUI(weather)
             initRecycler()
+
         }
     }
 
@@ -77,7 +80,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
         animLoading = view.findViewById(R.id.animationView)
-        animLoading.visibility = View.GONE
+
+
 
 
     }
@@ -87,7 +91,10 @@ class HomeFragment : Fragment() {
     fun updateUI(weather: WeatherForecast?){
         weather as WeatherForecast
        // binding.currCity.text =   weather.timezone
-        binding.currCity.text = getAddressFromLatLng(CurrentUser.lat,CurrentUser.long)
+        binding.currCity.text = LocalityManager.getAddressFromLatLng(requireActivity(),
+                 CurrentUser.location.latitude
+               ,CurrentUser.location.longitude
+        )
 
         binding.currDate.text = Formmater.getDateFormat(weather.current.dt)
         binding.currTime.text = Formmater.getTimeFormat(weather.current.dt)
@@ -106,27 +113,26 @@ class HomeFragment : Fragment() {
        hourlyAdapter = HourlyAdapter(requireContext(),weather.hourly)
        // hourlyAdapter.setHourlyWeatherList(weather.hourly)
         dailyAdapter = DailyAdapter(requireContext(),weather.daily)
+        animLoading.visibility = View.GONE
+
     }
     fun initRecycler(){
 
         layoutManagerHourly = LinearLayoutManager(context as Context,
+            LinearLayoutManager.HORIZONTAL,false)
+        layoutManagerDaily= LinearLayoutManager(context as Context,
             LinearLayoutManager.HORIZONTAL,false)
         layoutManagerDaily = LinearLayoutManager(context as Context)
         binding.hourlyRecycler.adapter = hourlyAdapter
         binding.dailyRecycler.adapter = dailyAdapter
         binding.hourlyRecycler.layoutManager = layoutManagerHourly
         binding.dailyRecycler.layoutManager = layoutManagerDaily
+
+
+
     }
-    fun getAddressFromLatLng(lat:Double,longg:Double) : String{
-       // Locale.setDefault(Locale("ar"))
-        var geocoder = Geocoder(context as Context, Locale.getDefault())
-        var addresses:List<Address>
-        addresses = geocoder.getFromLocation(lat,longg,1) as List<Address>
-        if(addresses.size>0) {
-            return " ${addresses.get(0).subAdminArea},${addresses.get(0).adminArea} ,${addresses.get(0).countryName}  "
-        }
-        return ""
-    }
+
+
 
 
 }

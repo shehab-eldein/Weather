@@ -17,16 +17,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourlyRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:id="@+id/mainLinearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:weightSum="1"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/hourlyRecycler">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hourlyRecycler">
 
                 <TextView
                     android:id="@+id/currCity"
@@ -34,7 +43,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    android:text="Test"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
@@ -51,7 +59,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="12:23"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
@@ -65,38 +72,35 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="Tue, May 3"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-                        app:layout_constraintStart_toEndOf="@+id/currTime"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/currTime"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/currTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="40"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="60sp"
                         app:layout_constraintBottom_toTopOf="@+id/currDesc"
                         app:layout_constraintEnd_toStartOf="@+id/currIcon"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/currTime"/>
+                        app:layout_constraintTop_toBottomOf="@+id/currTime" />
 
                     <TextView
                         android:id="@+id/currUnit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Celsius"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="40sp"
                         app:layout_constraintBottom_toTopOf="@+id/currDesc"
                         app:layout_constraintStart_toEndOf="@+id/currTemp"
-                        app:layout_constraintTop_toBottomOf="@+id/currTime"/>
+                        app:layout_constraintTop_toBottomOf="@+id/currTime" />
 
                     <ImageView
                         android:id="@+id/currIcon"
@@ -112,7 +116,6 @@
                         android:id="@+id/currDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cloudy"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20sp"
@@ -126,57 +129,47 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hourlyRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mainLinearlayout"
-                app:layout_constraintBottom_toTopOf="@+id/dailyRecycler"/>
-
-            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/dailyRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginBottom="15dp"
-                app:layout_constraintBottom_toTopOf="@+id/mainGridlayout"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.466"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hourlyRecycler" />
+                app:layout_constraintTop_toBottomOf="@+id/mainGridlayout" />
 
             <GridLayout
                 android:id="@+id/mainGridlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:rowCount="2"
-                android:columnCount="2"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_corners"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dailyRecycler"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:columnCount="2"
+                android:rowCount="2"
+                app:layout_constraintEnd_toEndOf="@+id/mainLinearlayout"
+                app:layout_constraintStart_toStartOf="@+id/mainLinearlayout"
+                app:layout_constraintTop_toBottomOf="@+id/mainLinearlayout">
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
+                    android:orientation="horizontal"
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="100dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/humidity"
-                            android:textSize="17sp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="17sp" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -187,15 +180,16 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="12.12"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
                             <TextView
                                 android:id="@+id/currHumidityUnit"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="%"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
 
                         </LinearLayout>
 
@@ -204,93 +198,98 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/humidity"
-                        android:layout_margin="5dp"/>
+                        android:layout_margin="5dp"
+                        android:src="@drawable/humidity" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
+                    android:orientation="horizontal"
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="100dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/pressure"
-                            android:textSize="17sp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="17sp" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:id="@+id/currPressure"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="12.12"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
                             <TextView
                                 android:id="@+id/currPressureUnit"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text=" hpa"
-                                android:textSize="18sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/pressure"
-                        android:layout_margin="5dp"/>
+                        android:layout_margin="5dp"
+                        android:src="@drawable/pressure" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
+                    android:orientation="horizontal"
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="100dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/clouds"
-                            android:textSize="17sp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="17sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:id="@+id/currClouds"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="12.12"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
                             <TextView
                                 android:id="@+id/currCloudsUnit"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="%"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -298,55 +297,57 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/cloud"
-                        android:layout_margin="5dp"/>
+                        android:layout_margin="5dp"
+                        android:src="@drawable/cloud" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
+                    android:orientation="horizontal"
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="100dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/wind_speed"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:id="@+id/currWindSpeed"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="12.12"
-                                android:textSize="20sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
                             <TextView
                                 android:id="@+id/currWindUnit"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/windMeter"
-                                android:textSize="18sp"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/windspeed"
-                        android:layout_margin="5dp"/>
+                        android:layout_margin="5dp"
+                        android:src="@drawable/windspeed" />
 
                 </LinearLayout>
 
@@ -364,5 +365,6 @@
     app:lottie_autoPlay="true"
     app:lottie_loop="true"
     android:background="@color/main_color"/>
+
 
 </FrameLayout>

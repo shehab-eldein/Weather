@@ -14,11 +14,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.safyweather.Constants
 import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
+import com.example.weather.Favorite.view.FavoriteFragmentDirections
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSettingsBinding
+import com.example.weather.db.DBManager
 import com.example.weather.helper.LocalityManager
+import com.example.weather.home.view.HomeFragment
+import com.example.weather.map.MapFragment
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting
 import com.example.weather.networking.NetworkingManager
@@ -48,26 +54,26 @@ class SettingsFragment : Fragment() {
 
     ): View? {
         // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSettingsBinding.bind(view)
-        //navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(),R.id.dashBoardContainer)
         settingsViewModelFactory = SettingsViewModelFactory(
             Repo(
-                NetworkingManager.getInstance(),requireContext()
+                NetworkingManager.getInstance(), DBManager(requireContext()),requireContext()
                 ,requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
             )
         )
 
+
         settingsViewModel = ViewModelProvider(this,settingsViewModelFactory).get(SettingsViewModel::class.java)
-
         settings = settingsViewModel.getStoredSettings()
-
         initDesign()
-
         initLogic()
 
     }
@@ -126,8 +132,11 @@ class SettingsFragment : Fragment() {
                 if (info != null) {
                     if (info!!.state == NetworkInfo.State.CONNECTED) {
                         //threre is an boolean argument here
-                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment()
+
+                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment(true)
                         navController.navigate(action)
+
+                       // Navigation.findNavController(requireActivity(), R.id.dashBoardContainer).navigate(R.id.mapFragment)
                     }
                     else{
                         val dialogBuilder = AlertDialog.Builder(requireContext())

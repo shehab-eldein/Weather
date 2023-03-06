@@ -4,12 +4,17 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.safyweather.Constants
+import com.example.weather.db.DBManager
 import com.example.weather.networking.NetworkingManager
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 private const val TAG = "Repo"
 class Repo(var networkingManager: NetworkingManager,
-          // var localSource: LocalSourceInterface,
+           var dbManager: DBManager,
            var context: Context,
            var sharedPreferences: SharedPreferences
 )  {
@@ -18,14 +23,15 @@ class Repo(var networkingManager: NetworkingManager,
     companion object{
         private var instance:Repo? = null
         fun getInstance(networkingManager: NetworkingManager,
-                       // localSource:LocalSourceInterface,
+                        dbManager: DBManager,
                         context: Context,
                         appSHP:SharedPreferences):Repo{
-            return instance?: Repo(networkingManager,//localSource,
+            return instance?: Repo(networkingManager,dbManager,
          context,appSHP)
         }
     }
 
+    //*********************************** RetroFit ************************************************
       suspend fun getCurrentWeatherWithLocationInRepo(lat:Double, long:Double, unit:String): WeatherForecast {
         Log.i(TAG, "getCurrentWeatherWithLocationInRepoooooooooooooo: ")
 
@@ -44,47 +50,45 @@ class Repo(var networkingManager: NetworkingManager,
 
 
     //***************************** ROOM *****************************************
-    /*
-     val storedAddresses: LiveData<List<WeatherAddress>>
-        get() = localSource.getAllAddresses()
+
+     var storedWeathers: List<WeatherForecast>? = null
+    var searchWeather :WeatherForecast? = null
 
 
+    fun storedLocations() = flow {
+        var updatedWeather: WeatherForecast
+        dbManager.getAll()
+            .collect{
+            storedWeathers = it
+        }
+        if (storedWeathers != null) {
+            for (weather in storedWeathers!!) {
+                updatedWeather =  getCurrentWeatherWithLocationInRepo(weather.lat,weather.lon,"metric")
+                emit(updatedWeather)
+            }
 
-     fun getAllWeathersInRepo(): LiveData<List<WeatherForecast>> {
-        return localSource.getAllStoredWeathers()
+        }
+    }
+    fun insertFavoriteWeather(weather: WeatherForecast) {
+        dbManager.insertWeather(weather)
     }
 
-     fun getOneWeather(lat: Double, long: Double): LiveData<WeatherForecast> {
-        return localSource.getWeatherWithLatLong(lat,long)
+    fun deleteFavoriteWeather(weather: WeatherForecast) {
+        dbManager.deleteWeather(weather)
     }
 
-     fun insertFavoriteAddress(address: WeatherAddress) {
-        localSource.insertFavoriteAddress(address)
+    fun searchWithLatLong (latLong: LatLng) = flow {
+         dbManager.search(latLong).collect{
+             searchWeather = it
+         }
+        if(searchWeather !=null) {
+            emit(searchWeather)
+        }
     }
 
-     fun deleteFavoriteAddress(address: WeatherAddress) {
-        localSource.deleteFavoriteAddress(address)
-    }
 
-     fun insertWeather(weather: WeatherForecast) {
-        localSource.insertWeather(weather)
-    }
 
-     fun deleteWeather(weather: WeatherForecast) {
-        localSource.deleteWeather(weather)
-    }
-    fun getAllAlertsInRepo(): LiveData<List<AlertData>> {
-        return localSource.getAllStoredAlerts()
-    }
 
-    fun insertAlertInRepo(alert: AlertData) {
-        localSource.insertAlert(alert)
-    }
-
-    fun deleteAlertInRepo(alert: AlertData) {
-        localSource.deleteAlert(alert)
-    }
-    */
 
     //************************* SHARED PREFRENCE **********************************************
       fun addSettingsToSharedPreferences(setting: Setting) {
@@ -103,19 +107,19 @@ class Repo(var networkingManager: NetworkingManager,
         return settingObj
     }
 
-      fun addWeatherToSharedPreferences(weather: WeatherForecast) {
+      fun add_LatLongToSP(latLong: LatLng) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
-        var weatherStr = gson.toJson(weather)
-        prefEditor.putString(Constants.MY_CURRENT_WEATHER_OBJ,weatherStr)
+        var weatherStr = gson.toJson(latLong)
+        prefEditor.putString(Constants.MY_CURRENT_LOCATION,weatherStr)
         prefEditor.commit()
     }
 
-      fun getWeatherSharedPreferences(): WeatherForecast? {
-        var weatherStr = sharedPreferences.getString(Constants.MY_CURRENT_WEATHER_OBJ,"")
+      fun get_LatLongSP(): LatLng? {
+        var latLong = sharedPreferences.getString(Constants.MY_CURRENT_LOCATION,"")
         var gson= Gson()
-        var weatherObj:WeatherForecast? = gson.fromJson(weatherStr,WeatherForecast::class.java)
-        return weatherObj
+        var location:LatLng? = gson.fromJson(latLong,LatLng::class.java)
+        return location
       }
 
 

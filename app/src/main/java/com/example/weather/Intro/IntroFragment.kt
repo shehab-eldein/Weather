@@ -26,18 +26,17 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.safyweather.Constants
 import com.example.weather.R
 import com.example.weather.databinding.FragmentIntroBinding
+import com.example.weather.db.DBManager
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting
 import com.example.weather.networking.NetworkingManager
 import com.github.matteobattilana.weather.PrecipType
 import com.google.android.gms.location.*
-
+import com.google.android.gms.maps.model.LatLng
 
 
 class IntroFragment : Fragment() {
@@ -66,8 +65,9 @@ class IntroFragment : Fragment() {
             // TODO: View Model For Intro
             //Add Defult Settings
             repo.addSettingsToSharedPreferences(setting)
-            CurrentUser.lat = loc.latitude
-            CurrentUser.long = loc.longitude
+            repo.add_LatLongToSP(LatLng(loc.latitude,loc.longitude))
+            CurrentUser.location = LatLng(loc.latitude,loc.longitude)
+
             val action = IntroFragmentDirections.actionIntroFragmentToHomeFragment2()
             navController.navigate(action)
 
@@ -87,7 +87,7 @@ class IntroFragment : Fragment() {
         setting = Setting()
 
         navController = Navigation.findNavController(requireActivity(), R.id.dashBoardContainer)
-        repo  = Repo(NetworkingManager.getInstance()
+        repo  = Repo(NetworkingManager.getInstance(), DBManager(requireContext())
             ,requireContext(),
             requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE))
 
@@ -126,8 +126,6 @@ class IntroFragment : Fragment() {
         startBtn = initialDialog.findViewById(R.id.initialSetupBtn)
         initialDialog.show()
     }
-
-
     fun startBtnClicked() {
         startBtn.setOnClickListener {
             connectivity = context?.getSystemService(Service.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -144,7 +142,7 @@ class IntroFragment : Fragment() {
                         }
                         else{
                             //there an argument here
-                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment()
+                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment(true)
                             navController.navigate(action)
                         }
                     }
