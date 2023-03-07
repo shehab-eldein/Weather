@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.airbnb.lottie.LottieAnimationView
 import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSplashBinding
@@ -39,6 +40,7 @@ class SplashFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         navController = Navigation.findNavController(requireActivity(), R.id.dashBoardContainer)
+
         /*
         Handler().postDelayed({
             //navController.navigate(R.id.action_splashFragment_to_introFragment)
@@ -46,6 +48,7 @@ class SplashFragment : Fragment() {
 
          */
         //make ViewModel here instead of repo direct
+
         repo = Repo.getInstance(
             NetworkingManager.getInstance(), DBManager(requireContext())
             ,requireContext(),
@@ -63,6 +66,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         nameText = view.findViewById(R.id.logoText)
            nameText.typeWrite(viewLifecycleOwner, "Clima App", 200L)
+
 
 
     }

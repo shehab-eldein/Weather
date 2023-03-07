@@ -83,7 +83,7 @@ class IntroFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentIntroBinding.inflate(layoutInflater)
-        animateBG()
+        animateBG(PrecipType.SNOW)
         setting = Setting()
 
         navController = Navigation.findNavController(requireActivity(), R.id.dashBoardContainer)
@@ -108,9 +108,9 @@ class IntroFragment : Fragment() {
         return binding.root
 
     }
-    fun animateBG() {
+    fun animateBG(type:PrecipType) {
         binding.weatherView.apply {
-            setWeatherData(PrecipType.SNOW)
+            setWeatherData(type)
             speed = 300
             emissionRate = 50f // snow count
             angle = 0 // The angle of the fall
@@ -142,7 +142,7 @@ class IntroFragment : Fragment() {
                         }
                         else{
                             //there an argument here
-                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment(true)
+                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment()
                             navController.navigate(action)
                         }
                     }

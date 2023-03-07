@@ -1,5 +1,6 @@
 package com.example.weather.Favorite.view
 
+import android.app.AlertDialog
 import android.app.Service
 import android.content.Context
 import android.net.ConnectivityManager
@@ -65,7 +66,8 @@ class FavoriteFragment : Fragment()
         setupFavRecycler()
         initViewModel()
         checkConnection()
-        /*
+        addBtnClicked()
+
         lifecycleScope.launch(Dispatchers.IO){
             addNew()
             withContext(Dispatchers.Main) {
@@ -73,49 +75,18 @@ class FavoriteFragment : Fragment()
                 }
         }
 
-         */
 
 
-
-
-
-        /*
-        val addressObserver = Observer<List<Location>> {
-            Log.i("TAG", "favoriteFragment on observvvvvvvvvvvvvvvvvve on get all addresses")
-            if(it != null){
-                favAdapter.setFavAddressesList(it)
-            }
-            favAdapter.notifyDataSetChanged()
-        }
-
-         */
-
-
-
-       // favViewModel.getAllFav().observe(viewLifecycleOwner,addressObserver)
-
-
-        /*
-        val weatherObserver = Observer<List<WeatherForecast>> {
-            Log.i("TAG", "fav fragment : in getAllWeathersInVvvvvvvvvvMmmmmmmmmmm")
-            if(it != null) {
-                favAdapter.setFavWeatherList(it)
-            }
-            favAdapter.notifyDataSetChanged()
-        }
-        favViewModel.getAllWeathersInVM().observe(viewLifecycleOwner,weatherObserver)
-
-         */
-
-
+    }
+    fun addBtnClicked() {
         binding.floatingAddFav.setOnClickListener {
 
 
-            lifecycleScope.launch(Dispatchers.Main) {
-                val action = FavoriteFragmentDirections.actionFavoriteFragmentToMapFragment (false)//false
-                navController.navigate(action)
 
-            }
+            val action = FavoriteFragmentDirections.actionFavoriteFragmentToMapFragment ().setIsHome(false)//false
+            navController.navigate(action)
+
+
 
         }
     }
@@ -128,14 +99,12 @@ class FavoriteFragment : Fragment()
     }
     suspend fun getData() {
     lifecycleScope.launch() {
-            favViewModel.getAllFav().collect{
+            favViewModel.getAllFav().collectLatest{
 
                 when (it) {
                     is DBState.onFail -> { } //hide loader show alert
-                    is DBState.onSuccessList -> {
-                        favAdapter.setFavWeatherList(it.weatherList)
-
-                    }
+                    is DBState.onSuccessList -> { favAdapter.setFavWeatherList(it.weatherList) }
+                    else -> { }//Still loading
                 }
                 favAdapter.notifyDataSetChanged()
             }
@@ -167,7 +136,6 @@ class FavoriteFragment : Fragment()
         favViewModel = ViewModelProvider(this,favViewModelFactory).get(FavViewModel::class.java)
     }
     fun setupFavRecycler(){
-        Log.i("TAG", "setupFavRecycler: ")
         favAdapter = FavAdapter(requireContext(), emptyList(),this)
         layoutManager = LinearLayoutManager(requireContext())
         binding.favoriteRecycler.adapter = favAdapter
@@ -181,22 +149,29 @@ class FavoriteFragment : Fragment()
         }
     }*/
     override fun onRemoveBtnClick(weather: WeatherForecast) {
-        /*
+
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setMessage(getString(R.string.deleteMsg))
             .setCancelable(false)
             .setPositiveButton(getString(R.string.delete)) { dialog, id ->
-                favViewModel.removeAddressFromFavorites(address)
-                favViewModel.removeOneFavWeather(weather)
-                dialog.cancel()
+              //  favViewModel.removeAddressFromFavorites(address)
+               // favViewModel.removeOneFavWeather(weather)
+                //dialog.cancel()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    favViewModel.delete(weather)
+                    withContext(Dispatchers.Main) {
+                        dialog.cancel()
+                        getData()
+                    }
+
+                }
             }
             .setNegativeButton(getString(R.string.cancel)) { dialog, id -> dialog.cancel() }
         val alert = dialogBuilder.create()
         alert.show()
-        //Log.i("TAG", "onRemoveBtnClick: adddddddddddddddrrrrrreeeeeessssssssssssss")
-        //Log.i("TAG", "onRemoveBtnClick: wwwwwwwwwwwwwwweeeeeeeeeeeeettttthhhhhheeeeeeeeeerrrrrrrrrrr ${favAdapter.itemCount}")
 
-         */
+
+
     }
       override fun onFavItemClick(weather: WeatherForecast) {
         /*

@@ -133,7 +133,7 @@ class SettingsFragment : Fragment() {
                     if (info!!.state == NetworkInfo.State.CONNECTED) {
                         //threre is an boolean argument here
 
-                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment(true)
+                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment()
                         navController.navigate(action)
 
                        // Navigation.findNavController(requireActivity(), R.id.dashBoardContainer).navigate(R.id.mapFragment)

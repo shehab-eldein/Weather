@@ -36,14 +36,17 @@ class Repo(var networkingManager: NetworkingManager,
         Log.i(TAG, "getCurrentWeatherWithLocationInRepoooooooooooooo: ")
 
 
+
         if(getSettingsSharedPreferences()?.language as Boolean){
 
-            var weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.en.langValue)
+            val weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.en.langValue)
             Log.i(TAG, "getCurrentWeatherWithLocationInRepo: ${weatherinrepo.current.weather[0].description} ")
             return weatherinrepo
         }
 
-          var weatherinrepo2 = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.ar.langValue)
+
+
+        val weatherinrepo2 = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.ar.langValue)
         Log.i("TAG", "getCurrentWeatherWithLocationInRepo: ${weatherinrepo2.current.weather[0].description} ")
         return weatherinrepo2
     }
@@ -59,7 +62,8 @@ class Repo(var networkingManager: NetworkingManager,
         var updatedWeather: WeatherForecast
         dbManager.getAll()
             .collect{
-            storedWeathers = it
+           storedWeathers = it
+
         }
         if (storedWeathers != null) {
             for (weather in storedWeathers!!) {

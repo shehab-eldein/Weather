@@ -1,8 +1,6 @@
 package com.example.weather.home.view
 
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
@@ -25,17 +24,16 @@ import com.example.weather.model.Repo
 import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
-import java.util.*
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
+import com.github.matteobattilana.weather.PrecipType
 
 
 private const val TAG = "HomeFragment"
 class HomeFragment : Fragment() {
+    // TODO: check internet
     /*
-
-
-    private var settings: Settings? = null
+ private var settings: Settings? = null
     var connectivity : ConnectivityManager? = null
     var info : NetworkInfo? = null
      */
@@ -57,37 +55,44 @@ class HomeFragment : Fragment() {
          factory = MyFactory( Repo(NetworkingManager.getInstance(),
              DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
          viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
+        getData()
 
-        GlobalScope.launch (Dispatchers.Main){
-           val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
-            Log.i(TAG, "onCreate:Enter ${weather.hourly[0].weather} ")
-            updateUI(weather)
-            initRecycler()
-
-        }
     }
 
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
-        animLoading = view.findViewById(R.id.animationView)
+        animLoading = view.findViewById(R.id.animationLogo)
+        animLoading
 
 
+        animateBG(PrecipType.SNOW)
 
 
     }
+    fun getData() {
+        lifecycleScope.launch (Dispatchers.Main){
+            val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
+            updateUI(weather)
+            initRecycler()
 
-
-
+        }
+    }
+    fun animateBG(type: PrecipType) {
+        binding.weatherView.apply {
+            setWeatherData(type)
+            speed = 300
+            emissionRate = 50f // snow count
+            angle = 0 // The angle of the fall
+            fadeOutPercent = 0.9f // When to fade out (0.0f-1.0f)
+        }
+    }
     fun updateUI(weather: WeatherForecast?){
         weather as WeatherForecast
        // binding.currCity.text =   weather.timezone

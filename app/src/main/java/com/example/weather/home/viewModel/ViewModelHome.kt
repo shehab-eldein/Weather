@@ -28,7 +28,7 @@ class ViewModelHome(var _repo: Repo): ViewModel() {
         return weather as WeatherForecast
 
     }
-    /*
+
 
     fun getLocationSP() :LatLng? {
        var location = _repo.get_LatLongSP()
@@ -37,7 +37,7 @@ class ViewModelHome(var _repo: Repo): ViewModel() {
     fun getStoredSettings(): Setting?{
         return _repo.getSettingsSharedPreferences()
     }
-
+/*
     fun getStoredCurrentWeather(): WeatherForecast?{
         return _repo.getWeatherSharedPreferences()
     }

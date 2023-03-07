@@ -42,7 +42,8 @@
             app:destination="@id/favoriteFragment" />
         <argument
             android:name="isHome"
-            app:argType="boolean" />
+            app:argType="boolean"
+            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment2"

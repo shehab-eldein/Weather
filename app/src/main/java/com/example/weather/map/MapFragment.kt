@@ -14,11 +14,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.safyweather.Constants
+import com.example.weather.Intro.IntroFragmentDirections
 import com.example.weather.R
 import com.example.weather.db.DBManager
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
 import com.example.weather.model.Repo
+import com.example.weather.model.Setting
 import com.example.weather.networking.NetworkingManager
 import com.example.weather.settings.view.SettingsFragmentDirections
 
@@ -40,7 +42,7 @@ class MapFragment : Fragment() {
     private lateinit var repo: Repo
 
     // TODO: duplicated setting object we need setting class
-    private var setting: com.example.weather.model.Setting? = null
+    private var setting: Setting? = null
     private val callback = OnMapReadyCallback { googleMap ->
         moveCamera(googleMap)
         onMapClicked(googleMap)
@@ -61,6 +63,7 @@ class MapFragment : Fragment() {
                 Context.MODE_PRIVATE
             )
         )
+        setting = Setting()
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
@@ -110,9 +113,14 @@ class MapFragment : Fragment() {
     }
 
     fun nextDestination(loc: LatLng) {
+
         repo.add_LatLongToSP(loc)
         if (args.isHome) {
             CurrentUser.location = loc
+            repo.addSettingsToSharedPreferences(setting!!)
+            repo.add_LatLongToSP(LatLng(loc.latitude,loc.longitude))
+            CurrentUser.location = LatLng(loc.latitude,loc.longitude)
+
             // TODO: Remove current user and use args
             val action = MapFragmentDirections.actionMapFragmentToHomeFragment2()
             navController.navigate(action)
@@ -134,3 +142,14 @@ class MapFragment : Fragment() {
 
     }
 }
+/*
+setting.location = 1
+//Add Defult Settings
+repo.addSettingsToSharedPreferences(setting)
+repo.add_LatLongToSP(LatLng(loc.latitude,loc.longitude))
+CurrentUser.location = LatLng(loc.latitude,loc.longitude)
+
+val action = IntroFragmentDirections.actionIntroFragmentToHomeFragment2()
+navController.navigate(action)
+
+ */
