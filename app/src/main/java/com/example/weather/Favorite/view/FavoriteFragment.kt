@@ -18,13 +18,14 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
+
 import com.example.weather.Favorite.viewModel.FavFactory
 import com.example.weather.Favorite.viewModel.FavViewModel
 import com.example.weather.R
 import com.example.weather.databinding.FragmentFavoriteBinding
 import com.example.weather.db.DBManager
 import com.example.weather.db.DBState
+import com.example.weather.helper.Constants.MY_SHARED_PREFERENCES
 import com.example.weather.model.Repo
 import com.example.weather.model.Location
 import com.example.weather.model.WeatherForecast

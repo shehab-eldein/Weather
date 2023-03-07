@@ -13,10 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.example.safyweather.Constants
+
 import com.example.weather.Intro.IntroFragmentDirections
 import com.example.weather.R
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
 import com.example.weather.model.Repo

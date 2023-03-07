@@ -1,4 +1,4 @@
-package com.example.safyweather
+package com.example.weather.helper
 
 
 object Constants {

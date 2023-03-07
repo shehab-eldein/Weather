@@ -26,10 +26,10 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.safyweather.Constants
 import com.example.weather.R
 import com.example.weather.databinding.FragmentIntroBinding
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting

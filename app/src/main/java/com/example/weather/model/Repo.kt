@@ -3,8 +3,9 @@ package com.example.weather.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.safyweather.Constants
+import androidx.lifecycle.LiveData
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants
 import com.example.weather.networking.NetworkingManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -39,7 +40,7 @@ class Repo(var networkingManager: NetworkingManager,
 
         if(getSettingsSharedPreferences()?.language as Boolean){
 
-            val weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit,Constants.languages.en.langValue)
+            val weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit, Constants.languages.en.langValue)
             Log.i(TAG, "getCurrentWeatherWithLocationInRepo: ${weatherinrepo.current.weather[0].description} ")
             return weatherinrepo
         }
@@ -52,7 +53,19 @@ class Repo(var networkingManager: NetworkingManager,
     }
 
 
-    //***************************** ROOM *****************************************
+    //**************************** Alerts *******************************************
+     fun getAllAlertsInRepo(): LiveData<List<AlertData>> {
+        return dbManager.getAllStoredAlerts()
+    }
+
+     fun insertAlertInRepo(alert: AlertData) {
+        dbManager.insertAlert(alert)
+    }
+
+     fun deleteAlertInRepo(alert: AlertData) {
+        dbManager.deleteAlert(alert)
+    }
+    //***************************** Favorites *****************************************
 
      var storedWeathers: List<WeatherForecast>? = null
     var searchWeather :WeatherForecast? = null

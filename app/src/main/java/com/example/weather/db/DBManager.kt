@@ -2,6 +2,8 @@ package com.example.weather.db
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import com.example.weather.model.AlertData
 import com.example.weather.model.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.flow
@@ -11,11 +13,13 @@ class DBManager(context: Context) {
 
     private  val TAG = "DBManager"
     private var favDao: WeatherDAO
+    private  var alertDao: AlertsDAO
 
 
     init {
         val db = WeatherDatabase.getInstance(context.applicationContext)
         favDao = db.addressesDao()
+        alertDao = db.alertsDao()
 
     }
 
@@ -45,6 +49,18 @@ class DBManager(context: Context) {
     }
     fun search(latLong: LatLng) = flow {
       emit(  favDao.searchWithLatLong(latLong.latitude,latLong.longitude))
+    }
+    //******************** Alerts ********************************************
+     fun getAllStoredAlerts(): LiveData<List<AlertData>> {
+        return alertDao.getAllStoredAlerts()
+    }
+
+     fun insertAlert(alert: AlertData) {
+        alertDao.insertAlert(alert)
+    }
+
+     fun deleteAlert(alert: AlertData) {
+        alertDao.deleteAlert(alert)
     }
 
 

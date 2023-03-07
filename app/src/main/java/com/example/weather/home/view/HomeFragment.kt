@@ -12,10 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
-import com.example.safyweather.Constants
+
 import com.example.weather.R
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants
 import com.example.weather.helper.Formmater
 import com.example.weather.home.viewModel.MyFactory
 import com.example.weather.home.viewModel.ViewModelHome
@@ -53,7 +54,8 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
          factory = MyFactory( Repo(NetworkingManager.getInstance(),
-             DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
+             DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(
+                 Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
          viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
         getData()
 

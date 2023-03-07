@@ -14,8 +14,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.safyweather.Constants
-import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
+
 import com.example.weather.R
 import com.example.weather.databinding.FragmentFavDetailBinding
 import com.example.weather.db.DBManager

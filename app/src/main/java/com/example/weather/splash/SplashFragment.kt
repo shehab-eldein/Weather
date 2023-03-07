@@ -12,10 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSplashBinding
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants.MY_SHARED_PREFERENCES
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting

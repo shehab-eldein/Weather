@@ -16,12 +16,12 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import com.example.safyweather.Constants
-import com.example.safyweather.Constants.MY_SHARED_PREFERENCES
+
 import com.example.weather.Favorite.view.FavoriteFragmentDirections
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSettingsBinding
 import com.example.weather.db.DBManager
+import com.example.weather.helper.Constants
 import com.example.weather.helper.LocalityManager
 import com.example.weather.home.view.HomeFragment
 import com.example.weather.map.MapFragment

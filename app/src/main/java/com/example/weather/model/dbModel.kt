@@ -12,6 +12,7 @@ data class Location(var locatinName:String,
                     @NonNull
                           var lon:Double)
 
+/*
 @Entity(tableName = "alerts")
 data class AlertData(var fromDate: Date,
                      var toDate: Date,
@@ -19,3 +20,5 @@ data class AlertData(var fromDate: Date,
     @PrimaryKey(autoGenerate = true)
     var pKey:Int = 0
 }
+
+ */
