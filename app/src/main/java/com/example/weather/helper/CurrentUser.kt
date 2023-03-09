@@ -6,5 +6,5 @@ import com.google.android.gms.maps.model.LatLng
 object  CurrentUser {
     var location = LatLng(30.111471,31.369408)
     var settings = Setting()
-    //var curretnAlert =
+    var alertLocation = location
 }

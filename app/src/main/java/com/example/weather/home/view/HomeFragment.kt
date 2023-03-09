@@ -122,6 +122,7 @@ class HomeFragment : Fragment() {
         dailyAdapter = DailyAdapter(requireContext(),weather.daily)
         animLoading.visibility = View.GONE
 
+
     }
     fun initRecycler(){
 

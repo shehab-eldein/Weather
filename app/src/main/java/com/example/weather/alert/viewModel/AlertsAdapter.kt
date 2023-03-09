@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weather.Favorite.view.OnFavWeatherClickListener
+import com.example.weather.alert.view.OnDeleteAlertListener
 import com.example.weather.databinding.ItemAlertBinding
 import com.example.weather.model.AlertData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class AlertsAdapter (private val lifeCycleScopeInput: CoroutineScope
+class AlertsAdapter (private val lifeCycleScopeInput: CoroutineScope,var onClickHandler: OnDeleteAlertListener
 )
     : ListAdapter<AlertData, AlertsAdapter.AlertViewHolder>(AlertDiffUtil()){
 
@@ -50,17 +52,12 @@ class AlertDiffUtil : DiffUtil.ItemCallback<AlertData>() {
         holder.binding.tvLocationAlert.text = current.address
 
         holder.binding.imgDeleteAlert.setOnClickListener {
-            lifeCycleScopeInput.launch {
-                //MyApp.getInstanceRepository().deleteAlert(current)
-                //delete alarm in repo
-
-            }
-
+            onClickHandler.onRemoveBtnClick(current)
         }
 
         holder.binding.tvStartTime.text = current.startString
 
-        holder.binding.tvEndTime.text = current.endString
+
 
     }
 

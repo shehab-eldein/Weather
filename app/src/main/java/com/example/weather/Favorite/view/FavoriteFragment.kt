@@ -7,18 +7,20 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleCoroutineScope
+import android.view.ViewTreeObserver
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.ui.Modifier
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.Favorite.viewModel.FavFactory
 import com.example.weather.Favorite.viewModel.FavViewModel
 import com.example.weather.R
@@ -27,13 +29,10 @@ import com.example.weather.db.DBManager
 import com.example.weather.db.DBState
 import com.example.weather.helper.Constants.MY_SHARED_PREFERENCES
 import com.example.weather.model.Repo
-import com.example.weather.model.Location
 import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-
 
 
 class FavoriteFragment : Fragment()
@@ -138,8 +137,18 @@ class FavoriteFragment : Fragment()
     }
     fun setupFavRecycler(){
         favAdapter = FavAdapter(requireContext(), emptyList(),this)
-        layoutManager = LinearLayoutManager(requireContext())
+       // layoutManager = LinearLayoutManager(requireContext())
         binding.favoriteRecycler.adapter = favAdapter
+        
+        binding.favoriteRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                Log.i(TAG, "onScrollStateChanged: Scroll")
+            }
+        })
+      // binding.favoriteRecycler.animation.start()
+        binding.favoriteRecycler.scrollIndicators
+        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.favoriteRecycler.layoutManager = layoutManager
     }
     /*fun getSelectedWeather(address: WeatherAddress){

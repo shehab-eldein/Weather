@@ -45,6 +45,12 @@ class Formmater {
             return formatedTime
 
         }
+        fun getDateFormat(txt: String): Date? {
+            val formatter = SimpleDateFormat("d MMMM, yyyy HH:mm")
+            formatter.timeZone = TimeZone.getTimeZone("GMT+2")
+            val date = formatter.parse(txt)
+            return date
+        }
     }
 
 

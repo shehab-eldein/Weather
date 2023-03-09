@@ -43,7 +43,14 @@
         <argument
             android:name="isHome"
             app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
+        <argument
+            android:name="isAlert"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_mapFragment_to_alertFragment"
+            app:destination="@id/alertFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment2"
@@ -67,9 +74,6 @@
         <action
             android:id="@+id/action_favoriteFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
-        <action
-            android:id="@+id/action_favoriteFragment_to_favDetailFragment"
-            app:destination="@id/favDetailFragment" />
         <argument
             android:name="lat"
             app:argType="float"
@@ -84,13 +88,20 @@
             android:defaultValue="Empty" />
     </fragment>
     <fragment
-        android:id="@+id/favDetailFragment"
-        android:name="com.example.weather.Favorite.view.FavDetailFragment"
-        android:label="fragment_fav_detail"
-        tools:layout="@layout/fragment_fav_detail" />
-    <fragment
         android:id="@+id/alertFragment"
         android:name="com.example.weather.alert.view.AlertFragment"
         android:label="fragment_alert"
-        tools:layout="@layout/fragment_alert" />
+        tools:layout="@layout/fragment_alert" >
+        <argument
+            android:name="lat"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="longg"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <action
+            android:id="@+id/action_alertFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 </navigation>

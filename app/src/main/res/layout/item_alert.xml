@@ -3,23 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="90dp"
     android:layout_margin="16dp"
-    app:cardBackgroundColor="@android:color/transparent"
+    app:cardBackgroundColor="@color/main_color"
     app:cardCornerRadius="26dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_corners">
 
         <TextView
             android:id="@+id/tv_location_alert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
             android:ellipsize="end"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,24 +34,11 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/tv_location_alert"
             app:layout_constraintTop_toBottomOf="@+id/tv_location_alert"
             tools:text="start date" />
-
-        <TextView
-            android:id="@+id/tv_end_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_start_time"
-            app:layout_constraintTop_toBottomOf="@+id/tv_start_time"
-            tools:text="end date" />
 
         <ImageButton
             android:id="@+id/img_delete_alert"

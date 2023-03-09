@@ -29,6 +29,7 @@
                 android:id="@+id/hourlyRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layoutAnimation="@anim/layout"
                 android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +140,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/dailyRecycler"
                 android:layout_width="match_parent"
+                android:layoutAnimation="@anim/move_layout"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:orientation="horizontal"

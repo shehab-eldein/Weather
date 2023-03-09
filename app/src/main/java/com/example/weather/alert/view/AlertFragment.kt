@@ -6,9 +6,12 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface.OnShowListener
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -23,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.R
@@ -33,15 +37,16 @@ import com.example.weather.databinding.FragmentAlertBinding
 import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
+import com.example.weather.helper.Formmater
 import com.example.weather.helper.LocalityManager
 import com.example.weather.model.AlertData
 import com.example.weather.model.Repo
 import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
-class AlertFragment : Fragment() {
+
+class AlertFragment : Fragment(),OnDeleteAlertListener {
     private  val TAG = "AlertFragment"
     lateinit var binding: FragmentAlertBinding
     lateinit var alertsAdapter: AlertsAdapter
@@ -51,11 +56,6 @@ class AlertFragment : Fragment() {
     lateinit var dialogView: View
     lateinit var alertDialog: AlertDialog
 
-    private var start_dateTime = ""
-    private var end_dateTime = ""
-
-    private var fromTime: Long = 0L
-    private var toTime: Long = 0L
     lateinit var viewModel: AlertsViewModel
     lateinit var factory: AlertsFactory
 
@@ -91,10 +91,11 @@ class AlertFragment : Fragment() {
 
     private fun initFrag() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        sharedPreferencesEditor = sharedPreferences.edit()
+       sharedPreferencesEditor = sharedPreferences.edit()
 
         builder = AlertDialog.Builder(activity)
-        dialogView = layoutInflater.inflate(R.layout.dialogue_new_alert, null)
+        dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
+
 
     }
 
@@ -155,22 +156,24 @@ class AlertFragment : Fragment() {
 
         builder.setView(dialogView)
         val textViewStartDate = dialogView.findViewById<TextView>(R.id.tv_start_date)
-        val textViewEndDate = dialogView.findViewById<TextView>(R.id.tv_end_date)
+       // val textViewEndDate = dialogView.findViewById<TextView>(R.id.tv_end_date)
         val tvLocation = dialogView.findViewById<TextView>(R.id.tv_location)
         textViewStartDate.setOnClickListener { showDatePicker(textViewStartDate) }
-        textViewEndDate.setOnClickListener { showDatePicker(textViewEndDate) }
+       // textViewEndDate.setOnClickListener { showDatePicker(textViewEndDate) }
         tvLocation.setOnClickListener { tvLocationClicked() }
-        builder.setPositiveButton(
-            "Save"
-        ) { _, i ->
-            saveClicked(textViewStartDate, textViewEndDate)
-        }
-        builder.setNegativeButton(
-            "Cancel"
-        ) { dialogInterface, i -> dialogInterface.dismiss() }
+        builder.setPositiveButton("Save") { _, i -> saveClicked(textViewStartDate, textViewStartDate) }
+        builder.setNegativeButton("Cancel") { dialogInterface, i -> dialogInterface.dismiss() }
 
         alertDialog = builder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.rgb(29,41,86)))
+       // alertDialog.window?.setBackgroundDrawable(Drawable.createFromPath("@drawable/rounded_corners"))
         alertDialog.show()
+        alertDialog.setOnShowListener(OnShowListener {
+            alertDialog .getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE)
+            alertDialog .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE)
+        })
+
+
     }
 
 
@@ -185,7 +188,6 @@ class AlertFragment : Fragment() {
         )
         datePickerDialog.show()
     }
-
     private fun showTimePicker(textView: TextView, date: String) {
         val calendar = Calendar.getInstance()
         val timePickerDialog = TimePickerDialog(
@@ -198,7 +200,6 @@ class AlertFragment : Fragment() {
         )
         timePickerDialog.show()
     }
-
     class NativeDate {
         companion object {
             fun getMonth(month: Int): String {
@@ -224,17 +225,10 @@ class AlertFragment : Fragment() {
     private fun tvLocationClicked() {
         sharedPreferencesEditor.putBoolean("tvLocationClicked", true)
         sharedPreferencesEditor.apply()
-/*
-        findNavController().navigate(
 
-            AlertFragmentDirections.actionNavigationAlertsToMapFragment(
-                isFromAlerts = true
-            )
+        findNavController().navigate(AlertFragmentDirections.actionAlertFragmentToMapFragment().setIsAlert(true))
 
 
-        )
-
- */
     }
 
     private fun saveClicked(textViewStartDate: TextView, textViewEndDate: TextView) {
@@ -243,15 +237,17 @@ class AlertFragment : Fragment() {
             ).isChecked || dialogView.findViewById<RadioButton>(R.id.rbAlarm).isChecked)
         ) {
 
-            val formatter = SimpleDateFormat("d MMMM, yyyy HH:mm")
-            formatter.timeZone = TimeZone.getTimeZone("GMT+2")
-            val dateStart = formatter.parse(textViewStartDate.text.toString())
-            val dateEnd = formatter.parse(textViewStartDate.text.toString())
+            //val formatter = SimpleDateFormat("d MMMM, yyyy HH:mm")
+            //formatter.timeZone = TimeZone.getTimeZone("GMT+2")
+            val dateStart = Formmater.getDateFormat(textViewStartDate.text.toString())
+           // val dateEnd = formatter.parse(textViewStartDate.text.toString())
             val unixTimeDTStart = dateStart?.time?.div(1000)
-            val unixTimeDTEnd = dateEnd?.time?.div(1000)
+           // val unixTimeDTEnd = dateEnd?.time?.div(1000)
 
             lifecycleScope.launch {
-                if (unixTimeDTStart != null && unixTimeDTEnd != null) {
+                if (unixTimeDTStart != null
+                    //&& unixTimeDTEnd != null
+                  ) {
 
                     var alertType = ""
                     if (dialogView.findViewById<RadioButton>(R.id.rbNotification).isChecked) {
@@ -262,34 +258,17 @@ class AlertFragment : Fragment() {
 
                     val alertItem = AlertData(
                         address = LocalityManager.getAddressFromLatLng(requireContext(),CurrentUser.location.latitude,CurrentUser.location.longitude),
-                        longitudeString = CurrentUser.location.longitude.toString()
-                        /*sharedPreferences.getString(
-                            "ALERT_LONGITUDE_FROM_MAP",
-                            ""
-                        )!!
-
-                  */
+                        longitudeString = CurrentUser.alertLocation.longitude.toString()
                         ,
-                        latitudeString = CurrentUser.location.latitude.toString()
-                        /*sharedPreferences.getString(
-                            "ALERT_LATITUDE_FROM_MAP",
-                            ""
-                        )!!
-
-                         */
+                        latitudeString = CurrentUser.alertLocation.latitude.toString()
                         ,
                         startString = textViewStartDate.text.toString(),
                         endString = textViewEndDate.text.toString(),
                         startDT = unixTimeDTStart.toInt(),
-                        endDT = unixTimeDTEnd.toInt(),
+                        endDT = 11
+                        ,
                         idHashLongFromLonLatStartStringEndStringAlertType = (
-                                /*sharedPreferences.getString(
-                            "ALERT_LONGITUDE_FROM_MAP",
-                            ""
-                        )!! + sharedPreferences.getString(
-                            "ALERT_LATITUDE_FROM_MAP",
-                            ""
-                        )!!*/
+
                                 CurrentUser.location.longitude.toString()+CurrentUser.location.latitude.toString()
                                         + textViewStartDate.text.toString() + textViewEndDate.text.toString() + alertType
 
@@ -299,7 +278,7 @@ class AlertFragment : Fragment() {
                         alertType = alertType
                     )
                     // insert in repo
-                    // MyApp.getInstanceRepository().insertAlert(alertItem)
+
                     viewModel.addAlertInVM(alertItem)
 
 
@@ -315,7 +294,7 @@ class AlertFragment : Fragment() {
     private fun setupAlertsAdapter() {
         val mlayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
-        alertsAdapter = AlertsAdapter(lifecycleScope)
+        alertsAdapter = AlertsAdapter(lifecycleScope,this)
 
         binding.rvAlerts.apply {
             layoutManager = mlayoutManager
@@ -346,7 +325,8 @@ class AlertFragment : Fragment() {
             )
             sharedPreferencesEditor.putString(
                 "end_date",
-                dialogView.findViewById<TextView>(R.id.tv_end_date).text.toString()
+                //dialogView.findViewById<TextView>(R.id.tv_end_date).text.toString()
+            "s"
             )
             sharedPreferencesEditor.putString(
                 "ALERT_ADDRESS",
@@ -383,12 +363,11 @@ class AlertFragment : Fragment() {
         ) {
             showAddAlertDialog()
             if (sharedPreferences.getString("start_date", "")!!.isNotEmpty()) {
-                dialogView.findViewById<TextView>(R.id.tv_start_date).text =
+            //    dialogView.findViewById<TextView>(R.id.tv_start_date).text =
                     sharedPreferences.getString("start_date", "")
             }
             if (sharedPreferences.getString("end_date", "")!!.isNotEmpty()) {
-                dialogView.findViewById<TextView>(R.id.tv_end_date).text =
-                    sharedPreferences.getString("end_date", "")
+              //  dialogView.findViewById<TextView>(R.id.tv_end_date).text = sharedPreferences.getString("end_date", "")
             }
             if (sharedPreferences.getString("ALERT_ADDRESS", "")!!.isNotEmpty()) {
                 dialogView.findViewById<TextView>(R.id.tv_location).text =
@@ -415,8 +394,9 @@ class AlertFragment : Fragment() {
 
     }
 
-
-
+    override fun onRemoveBtnClick(alert: AlertData) {
+       viewModel.removeAlertInVM(alert)
+    }
 
 
 }

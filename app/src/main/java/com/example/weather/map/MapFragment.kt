@@ -1,8 +1,6 @@
 package com.example.weather.map
 
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -115,7 +113,8 @@ class MapFragment : Fragment() {
 
     fun nextDestination(loc: LatLng) {
 
-        repo.add_LatLongToSP(loc)
+       // repo.add_LatLongToSP(loc)
+
         if (args.isHome) {
             CurrentUser.location = loc
             repo.addSettingsToSharedPreferences(setting!!)
@@ -126,7 +125,16 @@ class MapFragment : Fragment() {
             val action = MapFragmentDirections.actionMapFragmentToHomeFragment2()
             navController.navigate(action)
             //Navigation.findNavController(requireActivity(), R.id.dashBoardContainer).navigate(R.id.homeFragment)
-        } else {
+        }
+
+        if(args.isAlert) {
+            CurrentUser.alertLocation = loc
+            val action = MapFragmentDirections.actionMapFragmentToAlertFragment()
+            navController.navigate(action)
+        }
+
+
+        else {
             val action = MapFragmentDirections.actionMapFragmentToFavoriteFragment()
                 .setLongt(loc.longitude.toFloat())
                 .setLat(loc.latitude.toFloat())
