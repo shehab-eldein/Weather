@@ -50,6 +50,7 @@ class DBManager(context: Context) {
     fun search(latLong: LatLng) = flow {
       emit(  favDao.searchWithLatLong(latLong.latitude,latLong.longitude))
     }
+
     //******************** Alerts ********************************************
      fun getAllStoredAlerts(): LiveData<List<AlertData>> {
         return alertDao.getAllStoredAlerts()

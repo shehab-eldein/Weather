@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.R
+import com.example.weather.databinding.DailyItemLayoutBinding
+import com.example.weather.databinding.FavoriteItemLayoutBinding
 import com.example.weather.helper.Formmater
 import com.example.weather.model.DailyWeather
 
@@ -16,20 +18,26 @@ import com.example.weather.model.DailyWeather
 class DailyAdapter(var context: Context, var dailyWeather:List<DailyWeather>,
 // var tempUnit:String
   ):
-    RecyclerView.Adapter<DailyAdapter.DailyWeatherViewHolder>() {
+    RecyclerView.Adapter<DailyAdapter.DailyHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyWeatherViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.daily_item_layout,parent,false)
-            return DailyWeatherViewHolder(view)
-        }
+    class DailyHolder(var binding: DailyItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {}
 
-        override fun onBindViewHolder(holder: DailyWeatherViewHolder, position: Int) {
+    lateinit var binding: DailyItemLayoutBinding
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyHolder {
+        val inflater : LayoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        binding = DailyItemLayoutBinding.inflate(inflater, parent, false)
+        return DailyHolder(binding)
+
+    }
+
+        override fun onBindViewHolder(holder: DailyHolder, position: Int) {
             val oneDailyWeather: DailyWeather = dailyWeather[position]
-            holder.dailyDate.text = Formmater.getDayFormat(oneDailyWeather.dt)
-            holder.dailyDesc.text = oneDailyWeather.weather[0].description
-            holder.dailyTemp.text = "${oneDailyWeather.temp.max}/${oneDailyWeather.temp.min}"
-            holder.dailyUnit.text = context.getString(R.string.Kelvin)
+
+            holder.binding.dailyDate.text = Formmater.getDayFormat(oneDailyWeather.dt)
+            holder.binding.dailyDesc.text = oneDailyWeather.weather[0].description
+            holder.binding.dailyTemp.text = "${oneDailyWeather.temp.max}/${oneDailyWeather.temp.min}"
+            holder.binding.dailyUnit.text = context.getString(R.string.Kelvin)
             /*
             when(this.tempUnit) {
                 "standard" ->{
@@ -45,10 +53,20 @@ class DailyAdapter(var context: Context, var dailyWeather:List<DailyWeather>,
 
 
              */
-            //Change to picasso
-            Glide.with(context)
-                .load("https://openweathermap.org/img/wn/"+oneDailyWeather.weather[0].icon+"@2x.png")
-                .into(holder.dailyIcon)
+
+            val mainWeather =   dailyWeather[position].weather[0].main
+
+            when(mainWeather.lowercase()) {
+                "thunderstorm"->  holder.binding.dailyIcon.setImageResource(R.drawable.lightning)
+                "drizzle"    -> holder.binding.dailyIcon.setImageResource(R.drawable.drizzel)
+                "rain","squall"    -> holder.binding.dailyIcon.setImageResource(R.drawable.rain)
+                "snow"    -> holder.binding.dailyIcon.setImageResource(R.drawable.snow)
+                "clouds"    -> holder.binding.dailyIcon.setImageResource(R.drawable.cloudy)
+                "haze" ,"mist","fog"  -> holder.binding.dailyIcon.setImageResource(R.drawable.fog_haze)
+                "smoke"  -> holder.binding.dailyIcon.setImageResource(R.drawable.smoke)
+                "dust","sand","tornado" -> holder.binding.dailyIcon.setImageResource(R.drawable.sand)
+                else ->  holder.binding.dailyIcon.setImageResource(R.drawable.clear)
+            }
 
         }
 
@@ -56,15 +74,8 @@ class DailyAdapter(var context: Context, var dailyWeather:List<DailyWeather>,
             return dailyWeather.size-1
         }
 
-        fun setDailyWeatherList(dailyWeatherList:List<DailyWeather>){
-            this.dailyWeather = dailyWeatherList
-        }
 
-        inner class DailyWeatherViewHolder(private val view: View): RecyclerView.ViewHolder(view){
-            val dailyDate: TextView = view.findViewById(R.id.dailyDate)
-            val dailyDesc: TextView = view.findViewById(R.id.dailyDesc)
-            val dailyTemp: TextView = view.findViewById(R.id.dailyTemp)
-            val dailyIcon: ImageView = view.findViewById(R.id.dailyIcon)
-            val dailyUnit: TextView  = view.findViewById(R.id.dailyUnit)
-        }
+
+
+
     }

@@ -7,4 +7,5 @@ object  CurrentUser {
     var location = LatLng(30.111471,31.369408)
     var settings = Setting()
     var alertLocation = location
+    var isConnectedToNetwork = true
 }

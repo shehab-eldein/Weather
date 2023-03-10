@@ -8,8 +8,6 @@ import java.util.*
 
 class WeatherConverter {
     var gson = Gson()
-
-    //current weather
     @TypeConverter
     fun currentWeatherToString(currentWeather: CurrentWeather):String{
         return gson.toJson(currentWeather)
@@ -92,31 +90,7 @@ class WeatherConverter {
         return gson.fromJson(tempratureString,Temprature::class.java)
     }
 
-    //alert list
-    /*@TypeConverter
-    fun alertListToString(allAlerts:List<Alert>):String{
-        return gson.toJson(allAlerts)
-    }
 
-    @TypeConverter
-    fun stringToAlertsList(allAlertString:String):List<Alert>{
-        var list = object :TypeToken<List<Alert>>(){}.type
-        return gson.fromJson(allAlertString,list)
-    }
-
-    //alert
-    @TypeConverter
-    fun alertToString(oneAlert:Alert):String{
-        return gson.toJson(oneAlert)
-    }
-
-    @TypeConverter
-    fun stringToAlert(oneAlertString:String):Alert{
-        var list = object :TypeToken<Alert>(){}.type
-        return gson.fromJson(oneAlertString,list)
-    }*/
-
-    //tag
     @TypeConverter
     fun tagToString(oneTag:List<String>):String{
         return gson.toJson(oneTag)

@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -16,19 +15,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
 import com.example.weather.alert.AlertManager
-import com.example.weather.alert.viewModel.AlertsFactory
 import com.example.weather.alert.viewModel.AlertsViewModel
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
-import com.example.weather.home.view.HomeFragment
 import com.example.weather.model.AlertData
 import com.example.weather.model.Repo
 import com.example.weather.networking.NetworkingManager
-import com.example.weather.settings.view.SettingsFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 
@@ -37,18 +35,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: AlertsViewModel
-    lateinit var factory: AlertsFactory
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        factory = AlertsFactory( Repo(
-            NetworkingManager.getInstance(),
-            DBManager.getInstance(this),this,this.getSharedPreferences(
-                Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE))
-        )
-        viewModel = ViewModelProvider(this,factory).get(AlertsViewModel::class.java)
+
+        viewModel = ViewModelProvider(this).get(AlertsViewModel::class.java)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.dashBoardContainer) as NavHostFragment
         navController = navHostFragment.findNavController()

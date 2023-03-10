@@ -30,8 +30,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.R
-import com.example.weather.alert.viewModel.AlertsAdapter
-import com.example.weather.alert.viewModel.AlertsFactory
 import com.example.weather.alert.viewModel.AlertsViewModel
 import com.example.weather.databinding.FragmentAlertBinding
 import com.example.weather.db.DBManager
@@ -42,10 +40,12 @@ import com.example.weather.helper.LocalityManager
 import com.example.weather.model.AlertData
 import com.example.weather.model.Repo
 import com.example.weather.networking.NetworkingManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
 
 
+@AndroidEntryPoint
 class AlertFragment : Fragment(),OnDeleteAlertListener {
     private  val TAG = "AlertFragment"
     lateinit var binding: FragmentAlertBinding
@@ -55,20 +55,14 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
     lateinit var builder: AlertDialog.Builder
     lateinit var dialogView: View
     lateinit var alertDialog: AlertDialog
-
     lateinit var viewModel: AlertsViewModel
-    lateinit var factory: AlertsFactory
+
 
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAlertBinding.inflate(inflater, container, false)
-        factory = AlertsFactory( Repo(
-            NetworkingManager.getInstance(),
-            DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(
-                Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE))
-        )
-        viewModel = ViewModelProvider(this,factory).get(AlertsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AlertsViewModel::class.java)
 
         return binding.root
 
@@ -77,7 +71,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.i(TAG, "onViewCreated: of alarms")
+
 
         initFrag()
 
@@ -167,11 +161,12 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
         alertDialog = builder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.rgb(29,41,86)))
        // alertDialog.window?.setBackgroundDrawable(Drawable.createFromPath("@drawable/rounded_corners"))
-        alertDialog.show()
+
         alertDialog.setOnShowListener(OnShowListener {
             alertDialog .getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE)
             alertDialog .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE)
         })
+        alertDialog.show()
 
 
     }
@@ -257,7 +252,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
                     }
 
                     val alertItem = AlertData(
-                        address = LocalityManager.getAddressFromLatLng(requireContext(),CurrentUser.location.latitude,CurrentUser.location.longitude),
+                        address = LocalityManager.getAddressFromLatLng(requireContext(),CurrentUser.alertLocation.latitude,CurrentUser.alertLocation.longitude),
                         longitudeString = CurrentUser.alertLocation.longitude.toString()
                         ,
                         latitudeString = CurrentUser.alertLocation.latitude.toString()

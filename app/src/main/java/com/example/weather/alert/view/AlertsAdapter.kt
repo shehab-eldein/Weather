@@ -1,4 +1,4 @@
-package com.example.weather.alert.viewModel
+package com.example.weather.alert.view
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -8,12 +8,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weather.Favorite.view.OnFavWeatherClickListener
-import com.example.weather.alert.view.OnDeleteAlertListener
 import com.example.weather.databinding.ItemAlertBinding
 import com.example.weather.model.AlertData
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class AlertsAdapter (private val lifeCycleScopeInput: CoroutineScope,var onClickHandler: OnDeleteAlertListener
 )

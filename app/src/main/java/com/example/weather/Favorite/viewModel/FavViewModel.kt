@@ -6,21 +6,23 @@ import com.example.weather.db.DBState
 import com.example.weather.model.Repo
 import com.example.weather.model.WeatherForecast
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavViewModel(var repo:Repo):ViewModel() {
+@HiltViewModel
+class FavViewModel @Inject constructor(var repo:Repo):ViewModel() {
 
     var dbState = MutableStateFlow<DBState>(DBState.Loading)
 
 
     fun addtoFav(weather:WeatherForecast) {
-
-      repo.insertFavoriteWeather(weather)
-  }
+        repo.insertFavoriteWeather(weather)
+    }
   fun delete(weather:WeatherForecast) {
     repo.deleteFavoriteWeather(weather)
   }
@@ -45,6 +47,7 @@ class FavViewModel(var repo:Repo):ViewModel() {
                 }
         }
     }
+
     suspend fun getWeather(lat: Double,long:Double): WeatherForecast{
         var weather:WeatherForecast? = null
         val job =viewModelScope.launch(Dispatchers.IO) {
@@ -56,5 +59,7 @@ class FavViewModel(var repo:Repo):ViewModel() {
         return weather as WeatherForecast
 
     }
+
+
 
 }

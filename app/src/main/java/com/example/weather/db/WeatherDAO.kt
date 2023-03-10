@@ -1,10 +1,7 @@
 package com.example.weather.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
-import androidx.room.Query
 import com.example.weather.model.WeatherForecast
 
 @Dao

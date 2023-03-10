@@ -12,9 +12,10 @@ import com.google.gson.Gson
 import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 private const val TAG = "Repo"
-class Repo(var networkingManager: NetworkingManager,
+class Repo @Inject constructor (var networkingManager: NetworkingManager,
            var dbManager: DBManager,
            var context: Context,
            var sharedPreferences: SharedPreferences

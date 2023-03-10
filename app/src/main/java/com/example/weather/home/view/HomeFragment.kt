@@ -2,7 +2,6 @@ package com.example.weather.home.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
 import com.example.weather.helper.Formmater
-import com.example.weather.home.viewModel.MyFactory
 import com.example.weather.home.viewModel.ViewModelHome
 
 import com.example.weather.model.Repo
@@ -28,9 +26,10 @@ import kotlinx.coroutines.*
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
 import com.github.matteobattilana.weather.PrecipType
+import dagger.hilt.android.AndroidEntryPoint
 
 
-private const val TAG = "HomeFragment"
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     // TODO: check internet
     /*
@@ -38,6 +37,7 @@ class HomeFragment : Fragment() {
     var connectivity : ConnectivityManager? = null
     var info : NetworkInfo? = null
      */
+    private  val TAG = "HomeFragment"
     lateinit var animLoading: LottieAnimationView
     lateinit var binding: FragmentHomeBinding
     lateinit var hourlyAdapter: HourlyAdapter
@@ -45,18 +45,11 @@ class HomeFragment : Fragment() {
     lateinit var layoutManagerHourly: LinearLayoutManager
     lateinit var layoutManagerDaily: LinearLayoutManager
     lateinit var viewModel: ViewModelHome
-    lateinit var factory: MyFactory
-
-   // val latLongArgs: HomeFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-         factory = MyFactory( Repo(NetworkingManager.getInstance(),
-             DBManager.getInstance(requireContext()),requireContext(),requireContext().getSharedPreferences(
-                 Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)))
-         viewModel = ViewModelProvider(this,factory).get(ViewModelHome::class.java)
+        viewModel = ViewModelProvider(this).get(ViewModelHome::class.java)
         getData()
 
     }
@@ -74,7 +67,7 @@ class HomeFragment : Fragment() {
         animLoading
 
 
-        animateBG(PrecipType.SNOW)
+        animateBG(PrecipType.CLEAR)
 
 
     }
@@ -90,7 +83,7 @@ class HomeFragment : Fragment() {
         binding.weatherView.apply {
             setWeatherData(type)
             speed = 300
-            emissionRate = 50f // snow count
+            emissionRate = 200f // snow count
             angle = 0 // The angle of the fall
             fadeOutPercent = 0.9f // When to fade out (0.0f-1.0f)
         }
@@ -111,21 +104,45 @@ class HomeFragment : Fragment() {
         binding.currWindSpeed.text = weather.current.wind_speed.toString()
         binding.currClouds.text = weather.current.clouds.toString()
         binding.currPressure.text = weather.current.pressure.toString()
-        //duplicated delete when remove the comment look for handel unit
+        // TODO:  duplicated delete when remove the comment look for handel unit
         binding.currWindUnit.text = getString(R.string.windMile)
-        //use picasso
-        Glide.with(context as Context)
-            .load("https://openweathermap.org/img/wn/"+weather.current.weather[0].icon+"@2x.png")
-            .into(binding.currIcon)
+
+
+
+        val mainWeather =   weather.current.weather[0].main
+
+        when(mainWeather.lowercase()) {
+            "thunderstorm"->  binding.currIcon.setImageResource(R.drawable.lightning)
+            "drizzle"    -> {
+                binding.currIcon.setImageResource(R.drawable.drizzel)
+                animateBG(PrecipType.RAIN)
+            }
+            "rain","squall" -> {
+                 binding.currIcon.setImageResource(R.drawable.rain)
+                 animateBG(PrecipType.RAIN)
+            }
+            "snow"    -> {
+                binding.currIcon.setImageResource(R.drawable.snow)
+                animateBG(PrecipType.SNOW)
+            }
+            "clouds"    ->{
+                animateBG(PrecipType.RAIN)
+                binding.currIcon.setImageResource(R.drawable.cloudy)
+            }
+            "haze" ,"mist","fog"  -> binding.currIcon.setImageResource(R.drawable.fog_haze)
+            "smoke"  -> binding.currIcon.setImageResource(R.drawable.smoke)
+            "dust","sand","tornado" -> binding.currIcon.setImageResource(R.drawable.sand)
+            else ->  binding.currIcon.setImageResource(R.drawable.clear)
+        }
+
        hourlyAdapter = HourlyAdapter(requireContext(),weather.hourly)
-       // hourlyAdapter.setHourlyWeatherList(weather.hourly)
+
         dailyAdapter = DailyAdapter(requireContext(),weather.daily)
         animLoading.visibility = View.GONE
 
 
     }
     fun initRecycler(){
-
         layoutManagerHourly = LinearLayoutManager(context as Context,
             LinearLayoutManager.HORIZONTAL,false)
         layoutManagerDaily= LinearLayoutManager(context as Context,
@@ -135,9 +152,6 @@ class HomeFragment : Fragment() {
         binding.dailyRecycler.adapter = dailyAdapter
         binding.hourlyRecycler.layoutManager = layoutManagerHourly
         binding.dailyRecycler.layoutManager = layoutManagerDaily
-
-
-
     }
 
 
