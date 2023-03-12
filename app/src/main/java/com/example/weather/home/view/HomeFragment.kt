@@ -2,11 +2,11 @@ package com.example.weather.home.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,12 +16,15 @@ import com.example.weather.R
 import com.example.weather.adapters.DailyAdapter
 import com.example.weather.adapters.HourlyAdapter
 import com.example.weather.databinding.FragmentHomeBinding
+import com.example.weather.db.DBState
 import com.example.weather.helper.*
 import com.example.weather.home.viewModel.ViewModelHome
 
 import com.example.weather.model.WeatherForecast
 import kotlinx.coroutines.*
 import com.github.matteobattilana.weather.PrecipType
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -62,22 +65,52 @@ class HomeFragment : Fragment() {
         animLoading = view.findViewById(R.id.animationLogo)
         animLoading
         animateBG(PrecipType.CLEAR)
-        if (CurrentUser.isConnectedToNetwork) {
-            getData()
-        }else {
-            animLoading.visibility = View.GONE
-            //getData from room
-        }
+        initHome(view)
 
     }
 
-    fun getData() {
+    fun initHome(view:View){
+        if (CurrentUser.isConnectedToNetwork) {
+            getOnlineData()
+        }else {
+            getOfflineData()
+            val snackbar = Snackbar.make(view, "No internet connection", Snackbar.LENGTH_LONG)
+            snackbar.duration.times(700)
+            snackbar.show()
+        }
+    }
+    fun getOfflineData() {
+        lifecycleScope.launch (Dispatchers.Main){
+
+           viewModel.getHome(viewModel.getHomeLocSP()!!)
+               .collect{
+                   when (it) {
+                       is DBState.onFail -> { } //hide loader show alert
+                       is DBState.onSuccessWeather -> {
+                           updateUI(it.weather)
+                           initRecycler()
+                       }
+                       else -> { }//Still loading
+                   }
+               }
+        }
+    }
+    fun getOnlineData() {
         lifecycleScope.launch (Dispatchers.Main){
             val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
+            var location = LatLng(weather.lat,weather.lon)
+
             updateUI(weather)
             initRecycler()
-
+        withContext(Dispatchers.IO) {
+           handelHomeDB(location,weather)
         }
+        }
+    }
+    fun handelHomeDB(loc:LatLng,weather:WeatherForecast) {
+        viewModel.deletePrevHome(viewModel.getHomeLocSP()!!)
+        viewModel.addHomeLocSp(loc)
+        viewModel.addHome(weather)
     }
     fun animateBG(type: PrecipType) {
         binding.weatherView.apply {

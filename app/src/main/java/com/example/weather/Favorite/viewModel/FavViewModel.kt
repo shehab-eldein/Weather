@@ -1,6 +1,5 @@
 package com.example.weather.Favorite.viewModel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.weather.db.DBState
 import com.example.weather.model.Repo
@@ -10,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +19,7 @@ class FavViewModel @Inject constructor(var repo:Repo):ViewModel() {
 
 
     fun addtoFav(weather:WeatherForecast) {
-        repo.insertFavoriteWeather(weather)
+        repo.insertWeatherDB(weather)
     }
   fun delete(weather:WeatherForecast) {
     repo.deleteFavoriteWeather(weather)
@@ -39,14 +37,7 @@ class FavViewModel @Inject constructor(var repo:Repo):ViewModel() {
        }
         return dbState
   }
-    fun searchResult(latLng: LatLng) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.searchWithLatLong(latLng).catch { dbState.value = DBState.onFail(it) }
-                .collect{
-                    dbState.value = DBState.onSuccessWeather(it as WeatherForecast)
-                }
-        }
-    }
+
 
     suspend fun getWeather(lat: Double,long:Double): WeatherForecast{
         var weather:WeatherForecast? = null

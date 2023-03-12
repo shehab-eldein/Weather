@@ -47,8 +47,12 @@ class DBManager(context: Context) {
         favDao.delte(weather)
          Log.i(TAG, "insertWeather: Dlete in DBMana")
     }
+    //******************** Home ********************************************
     fun search(latLong: LatLng) = flow {
       emit(  favDao.searchWithLatLong(latLong.latitude,latLong.longitude))
+    }
+    fun deltePrevHome(loc:LatLng) {
+        favDao.deleteByLatLong(loc.latitude,loc.longitude)
     }
 
     //******************** Alerts ********************************************

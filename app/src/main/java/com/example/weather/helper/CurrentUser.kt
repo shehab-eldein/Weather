@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import com.example.weather.model.Setting
 import com.google.android.gms.maps.model.LatLng
+import kotlin.properties.Delegates
 
 object  CurrentUser {
     var location = LatLng(30.111471,31.369408)

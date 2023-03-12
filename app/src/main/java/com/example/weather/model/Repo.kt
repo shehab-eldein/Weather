@@ -9,9 +9,7 @@ import com.example.weather.helper.Constants
 import com.example.weather.networking.NetworkingManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 private const val TAG = "Repo"
@@ -84,7 +82,7 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
 
         }
     }
-    fun insertFavoriteWeather(weather: WeatherForecast) {
+    fun insertWeatherDB(weather: WeatherForecast) {
         dbManager.insertWeather(weather)
     }
 
@@ -92,6 +90,7 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         dbManager.deleteWeather(weather)
     }
 
+    //******************************* Home ******************************************************
     fun searchWithLatLong (latLong: LatLng) = flow {
          dbManager.search(latLong).collect{
              searchWeather = it
@@ -99,6 +98,9 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         if(searchWeather !=null) {
             emit(searchWeather)
         }
+    }
+    fun deletePreviousHome(loc:LatLng) {
+        dbManager.deltePrevHome(loc)
     }
 
 
@@ -122,6 +124,19 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         return settingObj
     }
 
+    fun add_HomeLocToSP(latLong: LatLng) {
+        var prefEditor = sharedPreferences.edit()
+        var gson= Gson()
+        var weatherStr = gson.toJson(latLong)
+        prefEditor.putString(Constants.Home_Loc,weatherStr)
+        prefEditor.commit()
+    }
+    fun get_HomeLocSP(): LatLng? {
+        var latLong = sharedPreferences.getString(Constants.Home_Loc,"")
+        var gson= Gson()
+        var location:LatLng? = gson.fromJson(latLong,LatLng::class.java)
+        return location
+    }
       fun add_LatLongToSP(latLong: LatLng) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()

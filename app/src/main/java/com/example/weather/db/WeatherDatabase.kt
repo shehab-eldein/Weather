@@ -8,7 +8,7 @@ import com.example.weather.model.Location
 import com.example.weather.model.WeatherForecast
 
 
-@Database(entities = arrayOf(WeatherForecast::class,AlertData::class), version = 4)
+@Database(entities = arrayOf(WeatherForecast::class,AlertData::class), version = 5)
 @TypeConverters(WeatherConverter::class)
 abstract class WeatherDatabase :RoomDatabase(){
 

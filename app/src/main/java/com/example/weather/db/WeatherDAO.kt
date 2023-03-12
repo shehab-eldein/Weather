@@ -17,4 +17,7 @@ interface WeatherDAO {
 
     @Query("SELECT * FROM weathers WHERE lat == :latt AND lon == :longg")
     fun searchWithLatLong(latt:Double, longg:Double): WeatherForecast
+
+    @Query("DELETE FROM weathers WHERE lat == :latt AND lon == :longg")
+    fun deleteByLatLong(latt:Double, longg:Double)
 }

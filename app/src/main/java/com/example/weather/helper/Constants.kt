@@ -6,6 +6,7 @@ object Constants {
 
     const val MY_SHARED_PREFERENCES = "WeatherSP"
     const val MY_CURRENT_LOCATION = "currentLocationSP"
+    const val Home_Loc = "homeLocSP"
     const val MY_SETTINGS_PREFS = "SettingsSP"
 
     enum class units(val unitsValue: Int) {
