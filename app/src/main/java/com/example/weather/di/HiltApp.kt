@@ -8,6 +8,7 @@ import com.example.weather.db.DBManager
 import com.example.weather.db.WeatherDAO
 import com.example.weather.db.WeatherDatabase
 import com.example.weather.helper.Constants.MY_SHARED_PREFERENCES
+import com.example.weather.helper.NetworkStatusTracker
 import com.example.weather.networking.NetworkingManager
 import dagger.Module
 import dagger.Provides
@@ -56,5 +57,10 @@ object HiltApp {
     @Provides
     fun getAlertDao(weatherDatabase: WeatherDatabase):AlertsDAO {
         return weatherDatabase.alertsDao()
+    }
+    @Singleton
+    @Provides
+    fun networkChecker(context: Application):NetworkStatusTracker {
+        return NetworkStatusTracker(context)
     }
 }

@@ -1,17 +1,14 @@
-package com.example.weather.home.view
+package com.example.weather.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.databinding.DailyItemLayoutBinding
-import com.example.weather.databinding.FavoriteItemLayoutBinding
+import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.Formmater
+import com.example.weather.helper.UnitHandler
 import com.example.weather.model.DailyWeather
 
 
@@ -37,22 +34,8 @@ class DailyAdapter(var context: Context, var dailyWeather:List<DailyWeather>,
             holder.binding.dailyDate.text = Formmater.getDayFormat(oneDailyWeather.dt)
             holder.binding.dailyDesc.text = oneDailyWeather.weather[0].description
             holder.binding.dailyTemp.text = "${oneDailyWeather.temp.max}/${oneDailyWeather.temp.min}"
-            holder.binding.dailyUnit.text = context.getString(R.string.Kelvin)
-            /*
-            when(this.tempUnit) {
-                "standard" ->{
-                    holder.dailyUnit.text = context.getString(R.string.Kelvin)
-                }
-                "metric" ->{
-                    holder.dailyUnit.text = context.getString(R.string.Celsius)
-                }
-                "imperial" ->{
-                    holder.dailyUnit.text = context.getString(R.string.Fahrenheit)
-                }
-            }
+            holder.binding.dailyUnit.text = UnitHandler.getUnitName(CurrentUser.settings).first
 
-
-             */
 
             val mainWeather =   dailyWeather[position].weather[0].main
 

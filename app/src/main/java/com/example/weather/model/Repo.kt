@@ -35,14 +35,11 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
 
     //*********************************** RetroFit ************************************************
       suspend fun getCurrentWeatherWithLocationInRepo(lat:Double, long:Double, unit:String): WeatherForecast {
-        Log.i(TAG, "getCurrentWeatherWithLocationInRepoooooooooooooo: ")
-
-
 
         if(getSettingsSharedPreferences()?.language as Boolean){
 
             val weatherinrepo = networkingManager.getWeatherByLocation(lat,long,unit, Constants.languages.en.langValue)
-            Log.i(TAG, "getCurrentWeatherWithLocationInRepo: ${weatherinrepo.current.weather[0].description} ")
+           // Log.i(TAG, "getCurrentWeatherWithLocationInRepo: ${weatherinrepo.current.weather[0].description} ")
             return weatherinrepo
         }
 

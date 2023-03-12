@@ -38,12 +38,15 @@ class LocalityManager {
         }
 
         fun getAddressFromLatLng(context: Context,lat:Double,longg:Double) : String{
-            // Locale.setDefault(Locale("ar"))
+             //Locale.setDefault(Locale("ar"))
             var geocoder = Geocoder(context , Locale.getDefault())
             var addresses:List<Address>
             addresses = geocoder.getFromLocation(lat,longg,1) as List<Address>
             if(addresses.size>0) {
-                return " ${addresses.get(0).subAdminArea},${addresses.get(0).adminArea} ,${addresses.get(0).countryName}  "
+                if (addresses.get(0).subAdminArea == null) {
+                    return "${addresses.get(0).adminArea}, ${addresses.get(0).countryName}  "
+                }
+                return " ${addresses.get(0).subAdminArea}, ${addresses.get(0).adminArea}, ${addresses.get(0).countryName}  "
             }
             return ""
         }

@@ -6,37 +6,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
 
 import com.example.weather.R
+import com.example.weather.adapters.DailyAdapter
+import com.example.weather.adapters.HourlyAdapter
 import com.example.weather.databinding.FragmentHomeBinding
-import com.example.weather.db.DBManager
-import com.example.weather.helper.Constants
-import com.example.weather.helper.Formmater
+import com.example.weather.helper.*
 import com.example.weather.home.viewModel.ViewModelHome
 
-import com.example.weather.model.Repo
 import com.example.weather.model.WeatherForecast
-import com.example.weather.networking.NetworkingManager
 import kotlinx.coroutines.*
-import com.example.weather.helper.CurrentUser
-import com.example.weather.helper.LocalityManager
 import com.github.matteobattilana.weather.PrecipType
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    // TODO: check internet
-    /*
- private var settings: Settings? = null
-    var connectivity : ConnectivityManager? = null
-    var info : NetworkInfo? = null
-     */
+
     private  val TAG = "HomeFragment"
     lateinit var animLoading: LottieAnimationView
     lateinit var binding: FragmentHomeBinding
@@ -50,7 +41,12 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ViewModelHome::class.java)
-        getData()
+        CurrentUser.settings = viewModel.getStoredSettings()!!
+
+
+
+
+
 
     }
 
@@ -65,12 +61,16 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.bind(view)
         animLoading = view.findViewById(R.id.animationLogo)
         animLoading
-
-
         animateBG(PrecipType.CLEAR)
-
+        if (CurrentUser.isConnectedToNetwork) {
+            getData()
+        }else {
+            animLoading.visibility = View.GONE
+            //getData from room
+        }
 
     }
+
     fun getData() {
         lifecycleScope.launch (Dispatchers.Main){
             val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
@@ -90,12 +90,10 @@ class HomeFragment : Fragment() {
     }
     fun updateUI(weather: WeatherForecast?){
         weather as WeatherForecast
-       // binding.currCity.text =   weather.timezone
         binding.currCity.text = LocalityManager.getAddressFromLatLng(requireActivity(),
                  CurrentUser.location.latitude
                ,CurrentUser.location.longitude
         )
-
         binding.currDate.text = Formmater.getDateFormat(weather.current.dt)
         binding.currTime.text = Formmater.getTimeFormat(weather.current.dt)
         binding.currTemp.text = weather.current.temp.toString()
@@ -104,13 +102,9 @@ class HomeFragment : Fragment() {
         binding.currWindSpeed.text = weather.current.wind_speed.toString()
         binding.currClouds.text = weather.current.clouds.toString()
         binding.currPressure.text = weather.current.pressure.toString()
-        // TODO:  duplicated delete when remove the comment look for handel unit
-        binding.currWindUnit.text = getString(R.string.windMile)
-
-
-
+        binding.currUnit .text = UnitHandler.getUnitName(CurrentUser.settings).first
+        binding.currWindUnit.text = UnitHandler.getUnitName(CurrentUser.settings).second
         val mainWeather =   weather.current.weather[0].main
-
         when(mainWeather.lowercase()) {
             "thunderstorm"->  binding.currIcon.setImageResource(R.drawable.lightning)
             "drizzle"    -> {
@@ -134,9 +128,7 @@ class HomeFragment : Fragment() {
             "dust","sand","tornado" -> binding.currIcon.setImageResource(R.drawable.sand)
             else ->  binding.currIcon.setImageResource(R.drawable.clear)
         }
-
-       hourlyAdapter = HourlyAdapter(requireContext(),weather.hourly)
-
+        hourlyAdapter = HourlyAdapter(requireContext(),weather.hourly)
         dailyAdapter = DailyAdapter(requireContext(),weather.daily)
         animLoading.visibility = View.GONE
 
@@ -146,8 +138,7 @@ class HomeFragment : Fragment() {
         layoutManagerHourly = LinearLayoutManager(context as Context,
             LinearLayoutManager.HORIZONTAL,false)
         layoutManagerDaily= LinearLayoutManager(context as Context,
-            LinearLayoutManager.HORIZONTAL,false)
-        layoutManagerDaily = LinearLayoutManager(context as Context)
+            LinearLayoutManager.VERTICAL,false)
         binding.hourlyRecycler.adapter = hourlyAdapter
         binding.dailyRecycler.adapter = dailyAdapter
         binding.hourlyRecycler.layoutManager = layoutManagerHourly

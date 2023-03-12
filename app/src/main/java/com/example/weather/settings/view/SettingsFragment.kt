@@ -1,41 +1,31 @@
 package com.example.weather.settings.view
 
 import android.app.Service
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-
-import com.example.weather.Favorite.view.FavoriteFragmentDirections
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSettingsBinding
-import com.example.weather.db.DBManager
-import com.example.weather.helper.Constants
 import com.example.weather.helper.LocalityManager
-import com.example.weather.home.view.HomeFragment
-import com.example.weather.map.MapFragment
-import com.example.weather.model.Repo
 import com.example.weather.model.Setting
-import com.example.weather.networking.NetworkingManager
 import com.example.weather.settings.viewmodel.SettingsViewModel
-import com.example.weather.settings.viewmodel.SettingsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 
+
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     lateinit var settingsViewModel: SettingsViewModel
-    lateinit var settingsViewModelFactory: SettingsViewModelFactory
     lateinit var binding: FragmentSettingsBinding
     private var settings: Setting? = null
     lateinit var navController: NavController
@@ -63,22 +53,17 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSettingsBinding.bind(view)
         navController = Navigation.findNavController(requireActivity(),R.id.dashBoardContainer)
-        settingsViewModelFactory = SettingsViewModelFactory(
-            Repo(
-                NetworkingManager.getInstance(), DBManager(requireContext()),requireContext()
-                ,requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-            )
-        )
 
 
-        settingsViewModel = ViewModelProvider(this,settingsViewModelFactory).get(SettingsViewModel::class.java)
+
+        settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         settings = settingsViewModel.getStoredSettings()
         initDesign()
-        initLogic()
+        radioBTnLogic()
 
     }
 
-    private fun initLogic() {
+    private fun radioBTnLogic() {
         notificationActive()
         notificationDeActivate()
         gpsActive()
@@ -89,18 +74,28 @@ class SettingsFragment : Fragment() {
         arLang()
         enLang()
     }
+
+    fun restartApp() {
+        requireActivity().finish()
+        requireActivity().startActivity(requireActivity().intent)
+        requireActivity().overridePendingTransition(0,2)
+    }
     private fun enLang() {
         binding.englishLang.setOnClickListener{
             settings?.language = true
             settingsViewModel.setSettingsSharedPrefs(settings as Setting)
             LocalityManager.setLocale(requireContext(),"en")
+            restartApp()
+
         }
     }
+
     private fun arLang() {
         binding.arabicLang.setOnClickListener{
             settings?.language = false
             settingsViewModel.setSettingsSharedPrefs(settings as Setting)
             LocalityManager.setLocale(requireContext(),"ar")
+            restartApp()
         }
     }
     private fun imperialUnit() {
@@ -131,12 +126,8 @@ class SettingsFragment : Fragment() {
                 Log.i("TAG", "connectivity != null")
                 if (info != null) {
                     if (info!!.state == NetworkInfo.State.CONNECTED) {
-                        //threre is an boolean argument here
-
-                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment()
+                        val action = SettingsFragmentDirections.actionSettingsFragment2ToMapFragment().setIsHome(true)
                         navController.navigate(action)
-
-                       // Navigation.findNavController(requireActivity(), R.id.dashBoardContainer).navigate(R.id.mapFragment)
                     }
                     else{
                         val dialogBuilder = AlertDialog.Builder(requireContext())
@@ -199,13 +190,11 @@ class SettingsFragment : Fragment() {
             settingsViewModel.setSettingsSharedPrefs(settings as Setting)
         }
     }
-
-
     fun initDesign(){
         //UNIT
         if(settings?.unit as Int == 0){binding.standardUnit.isChecked = true}
         else if(settings?.unit as Int == 1){binding.metricUnit.isChecked = true}
-        else{binding.metricUnit.isChecked = true}
+        else{binding.imperialUnit.isChecked = true}
 
         //LOCATION
         if(settings?.location as Int == 1){binding.GPS.isChecked = true}

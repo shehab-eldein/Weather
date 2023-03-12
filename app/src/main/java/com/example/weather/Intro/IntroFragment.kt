@@ -142,7 +142,7 @@ class IntroFragment : Fragment() {
                         }
                         else{
                             //there an argument here
-                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment()
+                            val action =  IntroFragmentDirections.actionIntroFragmentToMapFragment().setIsHome(true)
                             navController.navigate(action)
                         }
                     }

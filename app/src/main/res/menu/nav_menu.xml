@@ -6,16 +6,18 @@
         android:id="@+id/homeBtn"
         android:enabled="true"
         android:icon="@drawable/ic_home"
-        android:title="Home"
         app:cnb_backgroundColor="@color/mySecondaryColor"
         app:cnb_iconColor="@color/white"
-        app:cnb_textColor="@color/quantum_yellow50" />
+        app:cnb_textColor="@color/quantum_yellow50"
+        android:title=""
+
+        />
 
     <item
         android:id="@+id/favBtn"
         android:enabled="true"
         android:icon="@drawable/ic_favorite"
-        android:title="Favorite"
+        android:title=""
         app:cnb_backgroundColor="@color/mySecondaryColor"
         app:cnb_iconColor="@color/white"
         app:cnb_textColor="@color/quantum_yellow50" />
@@ -23,7 +25,7 @@
         android:id="@+id/alertBtn"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_add_alert_24"
-        android:title="Alerts"
+        android:title=""
         app:cnb_backgroundColor="@color/mySecondaryColor"
         app:cnb_iconColor="@color/white"
         app:cnb_textColor="@color/quantum_yellow50" />
@@ -31,7 +33,7 @@
         android:id="@+id/settingBtn"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="Settings"
+        android:title =""
         app:cnb_backgroundColor="@color/mySecondaryColor"
         app:cnb_iconColor="@color/white"
         app:cnb_textColor="@color/quantum_yellow50" />

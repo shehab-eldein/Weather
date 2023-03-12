@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Clima App</string>
+    <string name="chanelName">Weather</string>
+    <string name="channel_description">No Alerts For Today</string>
+    <string name="Home">الرئيسيه</string>
+    <string name="Favorite">المفضله</string>
+    <string name="Alerts">التنبيهات</string>
+    <string name="Settings">الاعدادات</string>
+    <string name="language">اللغة</string>
+    <string name="location">الموقع</string>
+    <string name="unit">الوحدات</string>
+    <string name="notifications">إشعارات</string>
+
+
+    <string name="Celsius">°C</string>
+    <string name="Fahrenheit">°F</string>
+    <string name="Kelvin">°K</string>
+    <string name="windMeter">m/s</string>
+    <string name="windMile">M/h</string>
+
+    <string name="arabic">عربي</string>
+    <string name="english">إنجليزي</string>
+    <string name="standard">معيار</string>
+    <string name="metric">قياس</string>
+    <string name="imperial">إمبراطوري</string>
+    <string name="gps">GPS</string>
+    <string name="maps">الخرائط</string>
+    <string name="enabled">سماح</string>
+    <string name="disabled">منع</string>
+
+    <string name="metricDesc">(Temprature: Celsius &amp; Wind speed: meter/sec)</string>
+    <string name="standardDesc">(Temprature: Kelvin &amp; Wind speed: meter/sec)</string>
+    <string name="imperialDesc">(Temprature: Fahrenheit &amp; Wind speed: miles/hour)</string>
+
+    <string name="initial_setup">الإعداد الأولي</string>
+    <string name="ok">نعم</string>
+    <string name="save">حفظ</string>
+    <string name="delete">مسح</string>
+    <string name="Cancel">إلغاء</string>
+    <string name="deleteMsg">هل أنت متأكد من حذف هذا العنصر؟</string>
+    <string name="saveLocation">هل أنت متأكد من حفظ هذا الموقع؟</string>
+    <string name="initial_setup_desc">كيف ترغب في الوصول إلى موقع الطقس؟</string>
+    <string name="humidity">رطوبة</string>
+    <string name="pressure">ضغط</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="clouds">سحاب</string>
+    <string name="from">من</string>
+    <string name="to">إلى</string>
+    <string name="warning">عند تعطيل الإخطارات لا يمكنك تلقي تنبيهات حول الطقس!</string>
+    <string name="networkWarning">يرجى التحقق من الشبكة!</string>
+    <string name="google_maps_key">AIzaSyBwafGW_1ALwLW6N_47ktwF0pBrK4WdSHA</string>
+    <string name="getCurrentLocation">الموقع الحالي</string>
+    <string name="openMap">افتح الخريطة</string>
+
+    <string name="start">بدأ</string>
+    <string name="getWeather">احصل على طقس؟</string>
+    <string name="anotherLocation">موقع آخر</string>
+
+
+</resources>

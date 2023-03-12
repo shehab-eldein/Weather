@@ -1,18 +1,18 @@
     package com.example.weather.Favorite.view
 
     import android.content.Context
-    import android.graphics.drawable.Drawable
     import android.view.LayoutInflater
     import android.view.ViewGroup
     import androidx.recyclerview.widget.LinearLayoutManager
     import androidx.recyclerview.widget.RecyclerView
-    import com.bumptech.glide.Glide
     import com.example.weather.R
     import com.example.weather.databinding.FavoriteItemLayoutBinding
+    import com.example.weather.helper.CurrentUser
     import com.example.weather.helper.Formmater
     import com.example.weather.helper.LocalityManager
-    import com.example.weather.home.view.DailyAdapter
-    import com.example.weather.home.view.HourlyAdapter
+    import com.example.weather.helper.UnitHandler
+    import com.example.weather.adapters.DailyAdapter
+    import com.example.weather.adapters.HourlyAdapter
     import com.example.weather.model.WeatherForecast
 
     class FavAdapter(var context: Context,var favWeatherList:List<WeatherForecast>
@@ -43,17 +43,10 @@
            holder.binding.currTime.text = Formmater.getTimeFormat(favWeatherList[position].current.dt)
             holder.binding.currDate.text =  Formmater.getDateFormat(favWeatherList[position].current.dt)
             holder.binding.currCity.text = LocalityManager.getAddressFromLatLng(context,favWeatherList[position].lat,favWeatherList[position].lon)
-            //holder.binding.currHumidity.text = favWeatherList[position].current.humidity.toString()
-            //holder.binding.currWindSpeed.text = favWeatherList[position].current.wind_speed.toString()
-            //holder.binding.currClouds.text = favWeatherList[position].current.clouds.toString()
-           //holder.binding.currPressure.text = favWeatherList[position].current.pressure.toString()
-            //duplicated delete when remove the comment look for handel unit
-            //holder.binding.currWindUnit.text  = "M/h"
-            //holder.binding.currWindSpeed.text = favWeatherList[position].current.wind_speed.toString()
+           holder.binding.currUnit .text = UnitHandler.getUnitName(CurrentUser.settings).first
             holder.binding.currTemp.text =  favWeatherList[position].current.temp.toString()
             holder.binding.currDesc.text =  favWeatherList[position].current.weather[0].description
             holder.binding.deleteIcon.setOnClickListener{ onClickHandler.onRemoveBtnClick(favWeatherList[position]) }
-
             val mainWeather =   favWeatherList[position].current.weather[0].main
             when(mainWeather.lowercase()) {
                 "thunderstorm"->  holder.binding.currIcon.setImageResource(R.drawable.lightning)
@@ -67,12 +60,6 @@
                 else ->  holder.binding.currIcon.setImageResource(R.drawable.clear)
             }
 
-
-
-
-
-
-
         }
         fun initRecycler(){
 
@@ -81,9 +68,7 @@
             layoutManagerDaily= LinearLayoutManager(context as Context,
                 LinearLayoutManager.HORIZONTAL,false)
             layoutManagerDaily = LinearLayoutManager(context as Context)
-           // binding.hourlyRecycler.adapter = hourlyAdapter
             binding.dailyRecycler.adapter = dailyAdapter
-            //binding.hourlyRecycler.layoutManager = layoutManagerHourly
             binding.dailyRecycler.layoutManager = layoutManagerDaily
 
 

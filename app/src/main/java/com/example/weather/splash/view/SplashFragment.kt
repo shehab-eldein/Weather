@@ -14,6 +14,8 @@ import androidx.navigation.Navigation
 import com.example.weather.R
 import com.example.weather.databinding.FragmentSplashBinding
 import com.example.weather.helper.CurrentUser
+import com.example.weather.helper.LocalityManager
+import com.example.weather.home.viewModel.ViewModelHome
 import com.example.weather.model.Setting
 import com.example.weather.splash.viewModel.SplashViewModel
 import com.google.android.gms.maps.model.LatLng
@@ -27,7 +29,6 @@ class SplashFragment : Fragment() {
     private lateinit var binding: FragmentSplashBinding
     private lateinit var navController: NavController
     private var locationSp: LatLng? = null
-    private var setting: Setting? = null
     lateinit var viewModel: SplashViewModel
 
 
@@ -40,6 +41,8 @@ class SplashFragment : Fragment() {
         navController = Navigation.findNavController(requireActivity(), R.id.dashBoardContainer)
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
         locationSp = viewModel.getLocatinSP()
+        viewModel
+
 
 
         return inflater.inflate(R.layout.fragment_splash, container, false)
@@ -53,6 +56,7 @@ class SplashFragment : Fragment() {
 
 
     }
+
     fun TextView.typeWrite(lifecycleOwner: LifecycleOwner, text: String, intervalMs: Long) {
 
         this@typeWrite.text = ""
@@ -64,6 +68,7 @@ class SplashFragment : Fragment() {
                 this@typeWrite.text = text.take(it + 1)
             }
             delay(1150)
+
            NavigateTo()
         }
     }

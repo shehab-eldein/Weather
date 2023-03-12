@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-
-class SettingsViewModel (private val repo: Repo):ViewModel(){
+@HiltViewModel
+class SettingsViewModel @Inject constructor (private val repo: Repo):ViewModel(){
     fun setSettingsSharedPrefs(settings: Setting){
         repo.addSettingsToSharedPreferences(settings)
     }

@@ -142,7 +142,7 @@ class FavoriteFragment : Fragment()
                 deleteWeather(weather)
                 dialog.cancel()
             }
-            .setNegativeButton(getString(R.string.cancel)) { dialog, id -> dialog.cancel() }
+            .setNegativeButton(getString(R.string.Cancel)) { dialog, id -> dialog.cancel() }
         val alert = dialogBuilder.create()
         alert.show()
 
