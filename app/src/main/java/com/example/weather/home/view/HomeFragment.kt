@@ -46,14 +46,7 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ViewModelHome::class.java)
         CurrentUser.settings = viewModel.getStoredSettings()!!
 
-
-
-
-
-
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -63,7 +56,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
         animLoading = view.findViewById(R.id.animationLogo)
-        animLoading
         animateBG(PrecipType.CLEAR)
         initHome(view)
 
@@ -74,7 +66,7 @@ class HomeFragment : Fragment() {
             getOnlineData()
         }else {
             getOfflineData()
-            val snackbar = Snackbar.make(view, "No internet connection", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, getString(R.string.noIntrent), Snackbar.LENGTH_LONG)
             snackbar.duration.times(700)
             snackbar.show()
         }
@@ -98,7 +90,7 @@ class HomeFragment : Fragment() {
     fun getOnlineData() {
         lifecycleScope.launch (Dispatchers.Main){
             val weather = viewModel.getWeather(CurrentUser.location.latitude,CurrentUser.location.longitude)
-            var location = LatLng(weather.lat,weather.lon)
+            val location = LatLng(weather.lat,weather.lon)
 
             updateUI(weather)
             initRecycler()

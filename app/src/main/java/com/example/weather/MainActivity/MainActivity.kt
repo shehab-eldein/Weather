@@ -67,13 +67,13 @@ class MainActivity : AppCompatActivity() {
 
                 when (it) {
                     MyState.Fetched -> {
-                        val snackbar = Snackbar.make(constraintLayout, "Connected to internet", Snackbar.LENGTH_LONG)
+                        val snackbar = Snackbar.make(constraintLayout, getString(R.string.conntectToInternet), Snackbar.LENGTH_LONG)
                         snackbar.show()
                         CurrentUser.isConnectedToNetwork = true
 
                     }
                     MyState.Error -> {
-                        val snackbar = Snackbar.make(constraintLayout, "Lost connection to internet", Snackbar.LENGTH_LONG)
+                        val snackbar = Snackbar.make(constraintLayout, getString(R.string.lostConnection), Snackbar.LENGTH_LONG)
                         snackbar.show()
                         CurrentUser.isConnectedToNetwork = false
 

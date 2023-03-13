@@ -59,4 +59,12 @@
     <string name="Settings">Settings</string>
     <string name="Cancel">Cancel</string>
 
+    <string name="snackFAvUpdate">Connect to intertnet to  updated your favorite</string>
+    <string name="noIntrent">No internet connection</string>
+    <string name="conntectToInternet">Connected to internet</string>
+    <string name="lostConnection">Lost connection to internet</string>
+<string name="connectToUse">Connect to the Internet to use this feature</string>
+    <string name="permissionRequired">This app needs permission to show notifications. Please enable it in the app settings.</string>
+    <string name="permissionTitle">Permission required</string>
+
 </resources>

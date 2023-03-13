@@ -5,9 +5,11 @@ import android.app.Service
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +21,9 @@ import com.example.weather.Favorite.viewModel.FavViewModel
 import com.example.weather.R
 import com.example.weather.databinding.FragmentFavoriteBinding
 import com.example.weather.db.DBState
+import com.example.weather.helper.CurrentUser
 import com.example.weather.model.WeatherForecast
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
@@ -34,10 +38,10 @@ class FavoriteFragment : Fragment()
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var favViewModel:FavViewModel
     private lateinit var binding: FragmentFavoriteBinding
-    var connectivity : ConnectivityManager? = null
     val args :FavoriteFragmentArgs by navArgs()
-    var info : NetworkInfo? = null
+
     var weatherForecast:WeatherForecast? = null
+    var myView:View? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,21 +54,51 @@ class FavoriteFragment : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        myView = view
         initVar(view)
         setupFavRecycler()
-        checkConnection()
         addBtnClicked()
 
+        if(CurrentUser.isConnectedToNetwork) {
+            onlineState()
+        }else {
+            offlineState()
+        }
+
+
+
+    }
+    fun onlineState() {
         lifecycleScope.launch(Dispatchers.IO){
             if (args.lat.toDouble() != 0.0) {
                 insertWeather()
             }
             withContext(Dispatchers.Main) {
-                    getUpdatedWeather()
-                }
+                getUpdatedWeather()
+            }
         }
+    }
+    fun showSnackBar(str:String) {
+        val snackbar = Snackbar.make(myView!!, str, Snackbar.LENGTH_LONG)
+        snackbar.duration.times(200)
+        snackbar.show()
+    }
+    fun offlineState() {
+          showSnackBar(getString(R.string.snackFAvUpdate))
+        lifecycleScope.launch(){
+            favViewModel.getOfflineFav().collectLatest {
+                when (it) {
+                    is DBState.onFail -> { } //hide loader show alert
+                    is DBState.onSuccessList -> {
+                        favAdapter.setWeatherList(it.weatherList)
+                        Log.i(TAG, "offlineState: ${it.weatherList.size}")
+                    }
+                    else -> { }//Still loading
+                }
+                favAdapter.notifyDataSetChanged()
+            }
 
-
+        }
 
     }
 
@@ -72,12 +106,19 @@ class FavoriteFragment : Fragment()
         binding = FragmentFavoriteBinding.bind(view)
         favViewModel = ViewModelProvider(this).get(FavViewModel::class.java)
         navController = Navigation.findNavController(requireActivity(),R.id.dashBoardContainer)
-        connectivity = context?.getSystemService(Service.CONNECTIVITY_SERVICE) as ConnectivityManager
+
     }
     fun addBtnClicked() {
+
         binding.floatingAddFav.setOnClickListener {
-            val action = FavoriteFragmentDirections.actionFavoriteFragmentToMapFragment ().setIsHome(false)
-            navController.navigate(action)
+            if (CurrentUser.isConnectedToNetwork) {
+                val action = FavoriteFragmentDirections.actionFavoriteFragmentToMapFragment()
+                    .setIsHome(false)
+                navController.navigate(action)
+
+            } else {
+                showSnackBar(getString(R.string.connectToUse))
+            }
 
         }
     }
@@ -111,20 +152,7 @@ class FavoriteFragment : Fragment()
             delay(1000)
         }.job.join()
     }
-    fun checkConnection() {
-        if ( connectivity != null) {
-            info = connectivity!!.activeNetworkInfo
-            if (info != null) {
-                if (info!!.state == NetworkInfo.State.CONNECTED) {
 
-                } else{
-                    binding.floatingAddFav.isEnabled = false
-                }
-            } else{
-                binding.floatingAddFav.isEnabled = false
-            }
-        }
-    }
 
     fun setupFavRecycler(){
         favAdapter = FavAdapter(requireContext(), emptyList(),this)

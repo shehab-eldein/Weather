@@ -58,26 +58,17 @@ class IntroFragment : Fragment() {
     val locationCallBack = object : LocationCallback(){
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
-            Log.i("TAG", "onLocationResult:")
             var loc = p0?.lastLocation as Location
-            Log.i("TAG", "lattttttt :"+loc.latitude+" looooooong : "+loc.longitude)
             setting.location = 1
-            // TODO: View Model For Intro
-            //Add Defult Settings
             repo.addSettingsToSharedPreferences(setting)
             repo.add_LatLongToSP(LatLng(loc.latitude,loc.longitude))
             CurrentUser.location = LatLng(loc.latitude,loc.longitude)
-
             val action = IntroFragmentDirections.actionIntroFragmentToHomeFragment2()
             navController.navigate(action)
 
 
         }
-        /*
-          // repo.addSettingsToSharedPreferences(settings as com.example.weather.model.Settings)
-    val action = InitialFragmentDirections.actionInitialFragmentToHomeFragment(
-    loc.latitude.toFloat(),loc.longitude.toFloat(), arrayOfUnits[settings?.unit as Int],true)
-            */
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,9 +81,6 @@ class IntroFragment : Fragment() {
         repo  = Repo(NetworkingManager.getInstance(), DBManager(requireContext())
             ,requireContext(),
             requireContext().getSharedPreferences(Constants.MY_SHARED_PREFERENCES, Context.MODE_PRIVATE))
-
-
-
 
 
     }
@@ -196,7 +184,6 @@ class IntroFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     fun requestNewLocationData(){
-        Log.i(TAG, "requestNewLocationData: ")
         val locationRequest = LocationRequest.create()
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         locationRequest.setInterval(5)

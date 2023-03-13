@@ -65,7 +65,8 @@ class AlertManager(private var context: Context) {
                     pendingIntent
                 )
 
-            } else if (alert.alertType == "alarm") {
+            }
+            else if (alert.alertType == "alarm") {
 
                 Log.i(TAG, "fireAlert: alarm")
 

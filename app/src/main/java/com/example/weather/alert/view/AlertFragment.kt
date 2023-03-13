@@ -40,6 +40,7 @@ import com.example.weather.helper.LocalityManager
 import com.example.weather.model.AlertData
 import com.example.weather.model.Repo
 import com.example.weather.networking.NetworkingManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
@@ -56,6 +57,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
     lateinit var dialogView: View
     lateinit var alertDialog: AlertDialog
     lateinit var viewModel: AlertsViewModel
+    lateinit var myView: View
 
 
 
@@ -72,12 +74,9 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-
+        myView = view
         initFrag()
-
         activateFABAlerts()
-
-
         setupAlertsAdapter()
 
     }
@@ -86,7 +85,6 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
     private fun initFrag() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
        sharedPreferencesEditor = sharedPreferences.edit()
-
         builder = AlertDialog.Builder(activity)
         dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
 
@@ -95,50 +93,61 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
 
 
     private fun activateFABAlerts() {
+
         binding.fabAlerts.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(), Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
 
-                val builder = AlertDialog.Builder(requireContext())
+            if(CurrentUser.isConnectedToNetwork) {
 
-                builder.setMessage("This app needs permission to show notifications. Please enable it in the app's settings.")
-                    .setTitle("Permission required")
+                if (ContextCompat.checkSelfPermission(
+                        requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
 
-                builder.setPositiveButton("OK") { _, _ ->
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri: Uri = Uri.fromParts("package", requireActivity().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
+                    val builder = AlertDialog.Builder(requireContext())
+
+                    builder.setMessage(getString(R.string.permissionRequired))
+                        .setTitle(getString(R.string.permissionTitle))
+
+                    builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri: Uri = Uri.fromParts("package", requireActivity().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+                    }
+
+                    val dialog = builder.create()
+                    dialog.show()
                 }
+                if (!Settings.canDrawOverlays(requireContext())) {
 
-                val dialog = builder.create()
-                dialog.show()
-            }
-            if (!Settings.canDrawOverlays(requireContext())) {
+                    val builder = AlertDialog.Builder(requireContext())
 
-                val builder = AlertDialog.Builder(requireContext())
+                    builder.setMessage(getString(R.string.permissionRequired))
+                        .setTitle(getString(R.string.permissionTitle))
 
-                builder.setMessage("This app needs permission to display an alarm over other apps. Please enable it in the app's settings.")
-                    .setTitle("Permission required")
+                    builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                        intent.data = Uri.parse("package:" + requireActivity().packageName)
+                        startActivityForResult(intent, 0)
+                    }
 
-                builder.setPositiveButton("OK") { _, _ ->
-                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                    intent.data = Uri.parse("package:" + requireActivity().packageName)
-                    startActivityForResult(intent, 0)
+                    val dialog = builder.create()
+                    dialog.show()
                 }
+                if ((ContextCompat.checkSelfPermission(
+                        requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                            ) && (Settings.canDrawOverlays(requireContext()))
+                ) {
+                    showAddAlertDialog();
+                }
+            }
+           else {
 
-                val dialog = builder.create()
-                dialog.show()
-            }
-            if ((ContextCompat.checkSelfPermission(
-                    requireContext(), Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-                        ) && (Settings.canDrawOverlays(requireContext()))
-            ) {
-                showAddAlertDialog();
-            }
+                val snackbar = Snackbar.make(myView!!, getString(R.string.connectToUse), Snackbar.LENGTH_LONG)
+                snackbar.duration.times(200)
+                snackbar.show()
+           }
 
 
         }
@@ -155,8 +164,8 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
         textViewStartDate.setOnClickListener { showDatePicker(textViewStartDate) }
        // textViewEndDate.setOnClickListener { showDatePicker(textViewEndDate) }
         tvLocation.setOnClickListener { tvLocationClicked() }
-        builder.setPositiveButton("Save") { _, i -> saveClicked(textViewStartDate, textViewStartDate) }
-        builder.setNegativeButton("Cancel") { dialogInterface, i -> dialogInterface.dismiss() }
+        builder.setPositiveButton(getString(R.string.save)) { _, i -> saveClicked(textViewStartDate, textViewStartDate) }
+        builder.setNegativeButton(getString(R.string.Cancel)) { dialogInterface, i -> dialogInterface.dismiss() }
 
         alertDialog = builder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.rgb(29,41,86)))
@@ -232,16 +241,14 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
             ).isChecked || dialogView.findViewById<RadioButton>(R.id.rbAlarm).isChecked)
         ) {
 
-            //val formatter = SimpleDateFormat("d MMMM, yyyy HH:mm")
-            //formatter.timeZone = TimeZone.getTimeZone("GMT+2")
+
             val dateStart = Formmater.getDateFormat(textViewStartDate.text.toString())
-           // val dateEnd = formatter.parse(textViewStartDate.text.toString())
             val unixTimeDTStart = dateStart?.time?.div(1000)
-           // val unixTimeDTEnd = dateEnd?.time?.div(1000)
+
 
             lifecycleScope.launch {
                 if (unixTimeDTStart != null
-                    //&& unixTimeDTEnd != null
+
                   ) {
 
                     var alertType = ""
@@ -272,7 +279,6 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
                             .toLong(),
                         alertType = alertType
                     )
-                    // insert in repo
 
                     viewModel.addAlertInVM(alertItem)
 

@@ -12,13 +12,14 @@ import com.google.gson.Gson
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-private const val TAG = "Repo"
+
 class Repo @Inject constructor (var networkingManager: NetworkingManager,
            var dbManager: DBManager,
            var context: Context,
            var sharedPreferences: SharedPreferences
 )  {
 
+    private  val TAG = "Repo"
 
     companion object{
         private var instance:Repo? = null
@@ -61,7 +62,7 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
      fun deleteAlertInRepo(alert: AlertData) {
         dbManager.deleteAlert(alert)
     }
-    //***************************** Favorites *****************************************
+    //***************************** Favorites ROOM *****************************************
 
      var storedWeathers: List<WeatherForecast>? = null
     var searchWeather :WeatherForecast? = null
@@ -82,6 +83,13 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
 
         }
     }
+    fun offlineFav() = flow {
+        dbManager.getAll()
+            .collect{
+                storedWeathers = it
+            }
+        emit(storedWeathers)
+    }
     fun insertWeatherDB(weather: WeatherForecast) {
         dbManager.insertWeather(weather)
     }
@@ -90,7 +98,7 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         dbManager.deleteWeather(weather)
     }
 
-    //******************************* Home ******************************************************
+    //******************************* Home  Room ******************************************************
     fun searchWithLatLong (latLong: LatLng) = flow {
          dbManager.search(latLong).collect{
              searchWeather = it
@@ -103,10 +111,6 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         dbManager.deltePrevHome(loc)
     }
 
-
-
-
-
     //************************* SHARED PREFRENCE **********************************************
       fun addSettingsToSharedPreferences(setting: Setting) {
         var prefEditor = sharedPreferences.edit()
@@ -114,13 +118,14 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         var settingStr = gson.toJson(setting)
         prefEditor.putString(Constants.MY_SETTINGS_PREFS,settingStr)
         prefEditor.commit()
-        Log.i(TAG, "addSettingsToSharedPreferences: Done")
+        Log.i(TAG, "addSettingsToSharedPreferences: ${setting.location}")
     }
 
       fun getSettingsSharedPreferences(): Setting? {
         var settingStr = sharedPreferences.getString(Constants.MY_SETTINGS_PREFS,"")
         var gson= Gson()
         var settingObj:Setting? = gson.fromJson(settingStr,Setting::class.java)
+          Log.i(TAG, "get settings from sp: ${settingObj?.location}")
         return settingObj
     }
 

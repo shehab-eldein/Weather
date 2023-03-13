@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +38,18 @@ class FavViewModel @Inject constructor(var repo:Repo):ViewModel() {
        }
         return dbState
   }
+    fun getOfflineFav():MutableStateFlow<DBState> {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.offlineFav()
+                .catch {
+                dbState.value = DBState.onFail(it)
+            }.collect{
+                dbState.value = DBState.onSuccessList(it!!)
+                }
+        }
+        return dbState
+
+    }
 
 
     suspend fun getWeather(lat: Double,long:Double): WeatherForecast{

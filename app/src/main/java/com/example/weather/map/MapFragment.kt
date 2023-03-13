@@ -40,9 +40,6 @@ class MapFragment : Fragment() {
     private lateinit var navController: NavController
     private val args: MapFragmentArgs by navArgs()
     private lateinit var repo: Repo
-    private lateinit var placesClient: PlacesClient
-
-    // TODO: duplicated setting object we need setting class/ Map View Model
     private var setting: Setting? = null
 
     private val callback = OnMapReadyCallback { googleMap ->
@@ -61,7 +58,7 @@ class MapFragment : Fragment() {
                 Context.MODE_PRIVATE
             )
         )
-        setting = Setting()
+        setting = repo.getSettingsSharedPreferences()
 
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
@@ -141,6 +138,14 @@ class MapFragment : Fragment() {
             navController.navigate(action)
 
         }
+        if (args.isSeetings){
+            CurrentUser.location = loc
+            repo.addSettingsToSharedPreferences(setting!!)
+            repo.add_LatLongToSP(LatLng(loc.latitude,loc.longitude))
+            CurrentUser.location = LatLng(loc.latitude,loc.longitude)
+            val action = MapFragmentDirections.actionMapFragmentToSettingsFragment2()
+            navController.navigate(action)
+        }
 
         if(args.isAlert) {
             CurrentUser.alertLocation = loc
@@ -149,7 +154,7 @@ class MapFragment : Fragment() {
         }
 
 
-        else if (!args.isAlert  && !args.isHome){
+        else if (!args.isAlert  && !args.isHome && !args.isSeetings){
             val action = MapFragmentDirections.actionMapFragmentToFavoriteFragment()
                 .setLongt(loc.longitude.toFloat())
                 .setLat(loc.latitude.toFloat())

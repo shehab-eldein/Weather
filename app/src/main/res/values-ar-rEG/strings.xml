@@ -57,5 +57,14 @@
     <string name="getWeather">احصل على طقس؟</string>
     <string name="anotherLocation">موقع آخر</string>
 
+    <string name="snackFAvUpdate">اتصل بالإنترنت لتحديث المفضلة لديك</string>
+    <string name="noIntrent">لا يوجد اتصال بالإنترنت</string>
+    <string name="conntectToInternet">متصل بالإنترنت</string>
+    <string name="lostConnection">انقطع الاتصال بالإنترنت</string>
+    <string name="permissionRequired">يحتاج هذا التطبيق إلى إذن لإظهار الإخطارات. يرجى تمكينه في إعدادات التطبيق.</string>
+    <string name="permissionTitle">الإذن مطلوب</string>
+    <string name="connectToUse">اتصل بالإنترنت لاستخدام هذه الميزة</string>
+
+
 
 </resources>

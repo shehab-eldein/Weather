@@ -30,16 +30,6 @@ class AlertsViewModel @Inject constructor ( val repo: Repo): ViewModel() {
         }
     }
 
-    /*
-    //settings
-    fun setSettingsSharedPrefs(settings: Setting){
-        repo.addSettingsToSharedPreferences(settings)
-    }
 
-    fun getStoredSettings(): Settings? {
-        return repo.getSettingsSharedPreferences()
-    }
-
-     */
 
 }

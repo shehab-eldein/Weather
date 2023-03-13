@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.Repo
 import com.example.weather.model.Setting
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,4 +17,9 @@ class SettingsViewModel @Inject constructor (private val repo: Repo):ViewModel()
         return repo.getSettingsSharedPreferences()
 
     }
+
+    fun addLocSP(latLng: LatLng){
+        repo.add_LatLongToSP(latLng)
+    }
+
 }
