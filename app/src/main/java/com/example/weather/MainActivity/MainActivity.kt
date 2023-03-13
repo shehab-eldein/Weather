@@ -2,11 +2,13 @@ package com.example.weather.MainActivity
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -16,8 +18,8 @@ import com.example.weather.alert.viewModel.AlertsViewModel
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
-import com.example.weather.home.viewModel.ViewModelHome
 import com.example.weather.helper.MyState
+import com.example.weather.home.viewModel.ViewModelHome
 import com.google.android.material.snackbar.Snackbar
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,8 +49,23 @@ class MainActivity : AppCompatActivity() {
         handelLanguage()
         onNetworkStateChange()
         networkStateOnStart()
+        navVisabilty()
 
 
+    }
+    private fun navVisabilty(){
+        navController.addOnDestinationChangedListener(object :
+            NavController.OnDestinationChangedListener {
+            override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+                when(destination.id) {
+                   R.id.splashFragment -> bottomChip.visibility = View.GONE
+                    R.id.mapFragment -> bottomChip.visibility = View.GONE
+                    else -> bottomChip.visibility = View.VISIBLE
+                }
+            }
+
+
+        })
     }
     private fun initVar() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -67,13 +84,11 @@ class MainActivity : AppCompatActivity() {
 
                 when (it) {
                     MyState.Fetched -> {
-                        val snackbar = Snackbar.make(constraintLayout, getString(R.string.conntectToInternet), Snackbar.LENGTH_LONG)
-                        snackbar.show()
                         CurrentUser.isConnectedToNetwork = true
 
                     }
                     MyState.Error -> {
-                        val snackbar = Snackbar.make(constraintLayout, getString(R.string.lostConnection), Snackbar.LENGTH_LONG)
+                        val snackbar = Snackbar.make(constraintLayout, getString(R.string.lostConnection), Snackbar.LENGTH_SHORT)
                         snackbar.show()
                         CurrentUser.isConnectedToNetwork = false
 

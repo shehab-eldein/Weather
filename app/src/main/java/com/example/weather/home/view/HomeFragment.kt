@@ -66,8 +66,7 @@ class HomeFragment : Fragment() {
             getOnlineData()
         }else {
             getOfflineData()
-            val snackbar = Snackbar.make(view, getString(R.string.noIntrent), Snackbar.LENGTH_LONG)
-            snackbar.duration.times(700)
+            val snackbar = Snackbar.make(view, getString(R.string.noIntrent), Snackbar.LENGTH_SHORT)
             snackbar.show()
         }
     }

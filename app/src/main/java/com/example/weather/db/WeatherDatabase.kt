@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.*
 import com.example.weather.helper.WeatherConverter
 import com.example.weather.model.AlertData
-import com.example.weather.model.Location
 import com.example.weather.model.WeatherForecast
 
 

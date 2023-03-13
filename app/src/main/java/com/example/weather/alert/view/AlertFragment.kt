@@ -85,6 +85,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
     private fun initFrag() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
        sharedPreferencesEditor = sharedPreferences.edit()
+
         builder = AlertDialog.Builder(activity)
         dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
 
@@ -190,6 +191,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
                 showTimePicker(textView, date)
             }, calendar[Calendar.YEAR], calendar[Calendar.MONTH], calendar[Calendar.DAY_OF_MONTH]
         )
+       // datePickerDialog.datePicker.background.colorFilter =
         datePickerDialog.show()
     }
     private fun showTimePicker(textView: TextView, date: String) {
@@ -258,6 +260,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
                         alertType = "alarm"
                     }
 
+                    CurrentUser.alertLocation = CurrentUser.location
                     val alertItem = AlertData(
                         address = LocalityManager.getAddressFromLatLng(requireContext(),CurrentUser.alertLocation.latitude,CurrentUser.alertLocation.longitude),
                         longitudeString = CurrentUser.alertLocation.longitude.toString()
@@ -271,7 +274,7 @@ class AlertFragment : Fragment(),OnDeleteAlertListener {
                         ,
                         idHashLongFromLonLatStartStringEndStringAlertType = (
 
-                                CurrentUser.location.longitude.toString()+CurrentUser.location.latitude.toString()
+                                CurrentUser.alertLocation.longitude.toString()+CurrentUser.alertLocation.latitude.toString()
                                         + textViewStartDate.text.toString() + textViewEndDate.text.toString() + alertType
 
 
