@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.model.AlertData
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
+import com.example.weather.model.repo.RepoInterFace
+import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlertsViewModel @Inject constructor ( val repo: Repo): ViewModel() {
+
 
     //alerts
     fun getAllAlertsInVM():LiveData<List<AlertData>>{

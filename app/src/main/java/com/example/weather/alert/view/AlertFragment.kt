@@ -5,7 +5,6 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.DialogInterface.OnShowListener
 import android.content.Intent
 import android.content.SharedPreferences
@@ -32,14 +31,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.R
 import com.example.weather.alert.viewModel.AlertsViewModel
 import com.example.weather.databinding.FragmentAlertBinding
-import com.example.weather.db.DBManager
-import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.Formmater
 import com.example.weather.helper.LocalityManager
 import com.example.weather.model.AlertData
-import com.example.weather.model.Repo
-import com.example.weather.networking.NetworkingManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

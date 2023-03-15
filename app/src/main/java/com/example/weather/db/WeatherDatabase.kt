@@ -12,7 +12,7 @@ import com.example.weather.model.WeatherForecast
 abstract class WeatherDatabase :RoomDatabase(){
 
 
-    abstract fun addressesDao(): WeatherDAO
+    abstract fun weatherDAO(): WeatherDAO
     abstract fun alertsDao():AlertsDAO
 
 

@@ -3,7 +3,7 @@ package com.example.weather.splash.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.weather.helper.CurrentUser
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

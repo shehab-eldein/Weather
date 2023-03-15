@@ -13,12 +13,12 @@ import com.example.weather.networking.NetworkingManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+
 object HiltApp {
 
     @Singleton
@@ -26,9 +26,10 @@ object HiltApp {
     fun getAppDB(context: Application): WeatherDatabase {
         return WeatherDatabase.getInstance(context)
     }
+
     @Singleton
     @Provides
-    fun getAppNetworking(context: Application): NetworkingManager {
+    fun getAppNetworking(): NetworkingManager {
         return NetworkingManager.getInstance()
     }
     @Singleton
@@ -51,7 +52,7 @@ object HiltApp {
     @Singleton
     @Provides
     fun getDao(weatherDatabase: WeatherDatabase):WeatherDAO {
-        return weatherDatabase.addressesDao()
+        return weatherDatabase.weatherDAO()
     }
     @Singleton
     @Provides

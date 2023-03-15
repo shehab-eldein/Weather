@@ -99,7 +99,10 @@ class HomeFragment : Fragment() {
         }
     }
     fun handelHomeDB(loc:LatLng,weather:WeatherForecast) {
-        viewModel.deletePrevHome(viewModel.getHomeLocSP()!!)
+        if (viewModel.getHomeLocSP() != null) {
+            viewModel.deletePrevHome(viewModel.getHomeLocSP()!!)
+        }
+
         viewModel.addHomeLocSp(loc)
         viewModel.addHome(weather)
     }

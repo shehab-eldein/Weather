@@ -2,19 +2,17 @@ package com.example.weather.Favorite.viewModel
 
 import androidx.lifecycle.*
 import com.example.weather.db.DBState
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.example.weather.model.WeatherForecast
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavViewModel @Inject constructor(var repo:Repo):ViewModel() {
+class FavViewModel @Inject constructor(var repo: Repo):ViewModel() {
 
     var dbState = MutableStateFlow<DBState>(DBState.Loading)
 

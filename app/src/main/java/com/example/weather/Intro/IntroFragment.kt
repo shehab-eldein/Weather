@@ -31,7 +31,7 @@ import com.example.weather.databinding.FragmentIntroBinding
 import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.example.weather.model.Setting
 import com.example.weather.networking.NetworkingManager
 import com.github.matteobattilana.weather.PrecipType

@@ -18,7 +18,7 @@ class DBManager(context: Context) {
 
     init {
         val db = WeatherDatabase.getInstance(context.applicationContext)
-        favDao = db.addressesDao()
+        favDao = db.weatherDAO()
         alertDao = db.alertsDao()
 
     }

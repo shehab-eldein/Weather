@@ -1,4 +1,4 @@
-package com.example.weather.model
+package com.example.weather.model.repo
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,6 +6,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
+import com.example.weather.model.AlertData
+import com.example.weather.model.Setting
+import com.example.weather.model.WeatherForecast
 import com.example.weather.networking.NetworkingManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -17,23 +20,23 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
            var dbManager: DBManager,
            var context: Context,
            var sharedPreferences: SharedPreferences
-)  {
+) : RepoInterFace {
 
     private  val TAG = "Repo"
 
     companion object{
-        private var instance:Repo? = null
+        private var instance: Repo? = null
         fun getInstance(networkingManager: NetworkingManager,
                         dbManager: DBManager,
                         context: Context,
-                        appSHP:SharedPreferences):Repo{
-            return instance?: Repo(networkingManager,dbManager,
+                        appSHP:SharedPreferences): Repo {
+            return instance ?: Repo(networkingManager,dbManager,
          context,appSHP)
         }
     }
 
     //*********************************** RetroFit ************************************************
-      suspend fun getCurrentWeatherWithLocationInRepo(lat:Double, long:Double, unit:String): WeatherForecast {
+      override suspend fun getCurrentWeatherWithLocationInRepo(lat:Double, long:Double, unit:String): WeatherForecast {
 
         if(getSettingsSharedPreferences()?.language as Boolean){
 
@@ -51,24 +54,24 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
 
 
     //**************************** Alerts *******************************************
-     fun getAllAlertsInRepo(): LiveData<List<AlertData>> {
+    override fun getAllAlertsInRepo(): LiveData<List<AlertData>> {
         return dbManager.getAllStoredAlerts()
     }
 
-     fun insertAlertInRepo(alert: AlertData) {
+     override fun insertAlertInRepo(alert: AlertData) {
         dbManager.insertAlert(alert)
     }
 
-     fun deleteAlertInRepo(alert: AlertData) {
+     override fun deleteAlertInRepo(alert: AlertData) {
         dbManager.deleteAlert(alert)
     }
     //***************************** Favorites ROOM *****************************************
 
      var storedWeathers: List<WeatherForecast>? = null
-    var searchWeather :WeatherForecast? = null
+    var searchWeather : WeatherForecast? = null
 
 
-    fun storedLocations() = flow {
+    override fun storedLocations() = flow {
         var updatedWeather: WeatherForecast
         dbManager.getAll()
             .collect{
@@ -83,23 +86,23 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
 
         }
     }
-    fun offlineFav() = flow {
+    override fun offlineFav() = flow {
         dbManager.getAll()
             .collect{
                 storedWeathers = it
             }
         emit(storedWeathers)
     }
-    fun insertWeatherDB(weather: WeatherForecast) {
+    override fun insertWeatherDB(weather: WeatherForecast) {
         dbManager.insertWeather(weather)
     }
 
-    fun deleteFavoriteWeather(weather: WeatherForecast) {
+    override fun deleteFavoriteWeather(weather: WeatherForecast) {
         dbManager.deleteWeather(weather)
     }
 
     //******************************* Home  Room ******************************************************
-    fun searchWithLatLong (latLong: LatLng) = flow {
+    override fun searchWithLatLong (latLong: LatLng) = flow {
          dbManager.search(latLong).collect{
              searchWeather = it
          }
@@ -107,12 +110,12 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
             emit(searchWeather)
         }
     }
-    fun deletePreviousHome(loc:LatLng) {
+    override fun deletePreviousHome(loc:LatLng) {
         dbManager.deltePrevHome(loc)
     }
 
     //************************* SHARED PREFRENCE **********************************************
-      fun addSettingsToSharedPreferences(setting: Setting) {
+    override fun addSettingsToSharedPreferences(setting: Setting) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
         var settingStr = gson.toJson(setting)
@@ -121,28 +124,28 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         Log.i(TAG, "addSettingsToSharedPreferences: ${setting.location}")
     }
 
-      fun getSettingsSharedPreferences(): Setting? {
+      override fun getSettingsSharedPreferences(): Setting? {
         var settingStr = sharedPreferences.getString(Constants.MY_SETTINGS_PREFS,"")
         var gson= Gson()
-        var settingObj:Setting? = gson.fromJson(settingStr,Setting::class.java)
+        var settingObj: Setting? = gson.fromJson(settingStr, Setting::class.java)
           Log.i(TAG, "get settings from sp: ${settingObj?.location}")
         return settingObj
     }
 
-    fun add_HomeLocToSP(latLong: LatLng) {
+    override fun add_HomeLocToSP(latLong: LatLng) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
         var weatherStr = gson.toJson(latLong)
         prefEditor.putString(Constants.Home_Loc,weatherStr)
         prefEditor.commit()
     }
-    fun get_HomeLocSP(): LatLng? {
+    override fun get_HomeLocSP(): LatLng? {
         var latLong = sharedPreferences.getString(Constants.Home_Loc,"")
         var gson= Gson()
         var location:LatLng? = gson.fromJson(latLong,LatLng::class.java)
         return location
     }
-      fun add_LatLongToSP(latLong: LatLng) {
+      override fun add_LatLongToSP(latLong: LatLng) {
         var prefEditor = sharedPreferences.edit()
         var gson= Gson()
         var weatherStr = gson.toJson(latLong)
@@ -150,7 +153,7 @@ class Repo @Inject constructor (var networkingManager: NetworkingManager,
         prefEditor.commit()
     }
 
-      fun get_LatLongSP(): LatLng? {
+      override fun get_LatLongSP(): LatLng? {
         var latLong = sharedPreferences.getString(Constants.MY_CURRENT_LOCATION,"")
         var gson= Gson()
         var location:LatLng? = gson.fromJson(latLong,LatLng::class.java)

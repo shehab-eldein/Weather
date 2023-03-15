@@ -3,7 +3,7 @@ package com.example.weather.home.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.db.DBState
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.example.weather.model.Setting
 import com.example.weather.model.WeatherForecast
 import com.google.android.gms.maps.model.LatLng

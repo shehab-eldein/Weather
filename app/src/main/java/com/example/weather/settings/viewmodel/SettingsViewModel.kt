@@ -1,8 +1,7 @@
 package com.example.weather.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.weather.helper.CurrentUser
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.example.weather.model.Setting
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel

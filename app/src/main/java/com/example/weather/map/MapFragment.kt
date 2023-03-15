@@ -18,7 +18,7 @@ import com.example.weather.db.DBManager
 import com.example.weather.helper.Constants
 import com.example.weather.helper.CurrentUser
 import com.example.weather.helper.LocalityManager
-import com.example.weather.model.Repo
+import com.example.weather.model.repo.Repo
 import com.example.weather.model.Setting
 import com.example.weather.networking.NetworkingManager
 import com.google.android.gms.common.api.Status
@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 
@@ -58,7 +57,8 @@ class MapFragment : Fragment() {
                 Context.MODE_PRIVATE
             )
         )
-        setting = repo.getSettingsSharedPreferences()
+      //  setting = repo.getSettingsSharedPreferences()
+        setting = Setting()
 
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
