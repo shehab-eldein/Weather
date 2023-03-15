@@ -48,7 +48,6 @@ class IntroFragment : Fragment() {
     lateinit var initialDialog: Dialog
     lateinit var navController: NavController
     var connectivity : ConnectivityManager? = null
-    // TODO: change network info
     var info : NetworkInfo? = null
     private lateinit var setting: Setting
     private lateinit var repo: Repo

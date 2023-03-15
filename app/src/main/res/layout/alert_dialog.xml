@@ -43,6 +43,7 @@
                 android:id="@+id/rbNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/gray"
                 android:checked="false"
                 android:text="@string/notifications"
                 android:textColor="@color/white"
