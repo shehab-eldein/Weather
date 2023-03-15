@@ -12,6 +12,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.example.weather.R
 import com.example.weather.alert.AlertManager
 import com.example.weather.alert.viewModel.AlertsViewModel
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         onNetworkStateChange()
         networkStateOnStart()
         navVisabilty()
+
+
 
 
     }

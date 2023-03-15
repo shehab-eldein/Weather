@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
 xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".settings.view.SettingsFragment">
@@ -15,14 +16,14 @@ tools:context=".settings.view.SettingsFragment">
         android:id="@+id/langSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/language"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:padding="10dp"
         android:layout_margin="10dp"
         android:background="@drawable/rounded_corners"
-        />
+        android:padding="10dp"
+        android:text="@string/language"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

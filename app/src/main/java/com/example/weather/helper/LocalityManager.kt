@@ -50,6 +50,21 @@ class LocalityManager {
             }
             return ""
         }
+
+        fun convertToArabicNumber(englishNumberInput: String): String {
+            val arabicNumbers = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
+            val englishNumbers = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+            val builder = StringBuilder()
+            for (i in englishNumberInput) {
+                if (englishNumbers.contains(i)) {
+                    builder.append(arabicNumbers[englishNumbers.indexOf(i)])
+                } else {
+                    builder.append(i) // point
+                }
+            }
+            return builder.toString()
+        }
+
     }
 
 }

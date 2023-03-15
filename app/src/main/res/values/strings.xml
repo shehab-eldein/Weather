@@ -67,4 +67,11 @@
     <string name="permissionRequired">This app needs permission to show notifications. Please enable it in the app settings.</string>
     <string name="permissionTitle">Permission required</string>
 
+    <string name="F">"°F"</string>
+    <string name="mh">"°F"</string>
+    <string name="K">"°K"</string>
+    <string name="ms">"°m/s"</string>
+    <string name="C">"°C"</string>
+
+
 </resources>

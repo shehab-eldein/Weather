@@ -6,6 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rounded_corners">
+    <com.github.matteobattilana.weather.WeatherView
+        android:id="@+id/weather_view2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,6 +39,8 @@
                 android:id="@+id/mainLinearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:backgroundTint="@android:color/transparent"
                 android:orientation="vertical"
                 android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginHorizontal="15dp"
-                    android:background="@drawable/rounded_corners">
+                    android:background="@android:color/transparent">
 
                     <TextView
                         android:id="@+id/currTime"
@@ -135,6 +145,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
+                android:background="@android:color/transparent"
+                android:backgroundTint="@android:color/transparent"
                 android:layoutAnimation="@anim/layout"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -147,7 +159,7 @@
 
     </ScrollView>
 
-    <!---->
+
 
 
 </FrameLayout>

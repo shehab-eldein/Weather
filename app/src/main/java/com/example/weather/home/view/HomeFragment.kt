@@ -123,14 +123,24 @@ class HomeFragment : Fragment() {
         )
         binding.currDate.text = Formmater.getDateFormat(weather.current.dt)
         binding.currTime.text = Formmater.getTimeFormat(weather.current.dt)
-        binding.currTemp.text = weather.current.temp.toString()
+        if (CurrentUser.settings.language) {
+            binding.currTemp.text = weather.current.temp.toString()
+            binding.currWindSpeed.text = weather.current.wind_speed.toString()
+            binding.currHumidity.text = weather.current.humidity.toString()
+            binding.currClouds.text = weather.current.clouds.toString()
+            binding.currPressure.text = weather.current.pressure.toString()
+        } else {
+            binding.currTemp.text = LocalityManager.convertToArabicNumber(weather.current.temp.toString())
+            binding.currWindSpeed.text = LocalityManager.convertToArabicNumber( weather.current.wind_speed.toString())
+            binding.currHumidity.text =  LocalityManager.convertToArabicNumber(weather.current.humidity.toString())
+            binding.currClouds.text =  LocalityManager.convertToArabicNumber(weather.current.clouds.toString())
+            binding.currPressure.text =  LocalityManager.convertToArabicNumber(weather.current.pressure.toString())
+        }
+
         binding.currDesc.text = weather.current.weather[0].description
-        binding.currHumidity.text = weather.current.humidity.toString()
-        binding.currWindSpeed.text = weather.current.wind_speed.toString()
-        binding.currClouds.text = weather.current.clouds.toString()
-        binding.currPressure.text = weather.current.pressure.toString()
-        binding.currUnit .text = UnitHandler.getUnitName(CurrentUser.settings).first
-        binding.currWindUnit.text = UnitHandler.getUnitName(CurrentUser.settings).second
+        binding.currUnit .text = getString( UnitHandler.getUnitName(CurrentUser.settings).first)
+        binding.currWindUnit.text = getString( UnitHandler.getUnitName(CurrentUser.settings).second)
+       // binding.currPressureUnit.text = getString(R.string)
         val mainWeather =   weather.current.weather[0].main
         when(mainWeather.lowercase()) {
             "thunderstorm"->  binding.currIcon.setImageResource(R.drawable.lightning)

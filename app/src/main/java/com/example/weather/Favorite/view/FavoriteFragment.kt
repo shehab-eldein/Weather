@@ -1,15 +1,11 @@
 package com.example.weather.Favorite.view
 
 import android.app.AlertDialog
-import android.app.Service
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,9 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.lottie.LottieAnimationView
 import com.example.weather.Favorite.viewModel.FavViewModel
 import com.example.weather.R
 import com.example.weather.databinding.FragmentFavoriteBinding
+
 import com.example.weather.db.DBState
 import com.example.weather.helper.CurrentUser
 import com.example.weather.model.WeatherForecast
@@ -39,16 +37,18 @@ class FavoriteFragment : Fragment()
     private lateinit var favViewModel:FavViewModel
     private lateinit var binding: FragmentFavoriteBinding
     val args :FavoriteFragmentArgs by navArgs()
-
     var weatherForecast:WeatherForecast? = null
     var myView:View? = null
+    lateinit var animLoading: LottieAnimationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         return inflater.inflate(R.layout.fragment_favorite, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,6 +58,7 @@ class FavoriteFragment : Fragment()
         initVar(view)
         setupFavRecycler()
         addBtnClicked()
+
 
         if(CurrentUser.isConnectedToNetwork) {
             onlineState()
@@ -90,7 +91,9 @@ class FavoriteFragment : Fragment()
                 when (it) {
                     is DBState.onFail -> { } //hide loader show alert
                     is DBState.onSuccessList -> {
+
                         favAdapter.setWeatherList(it.weatherList)
+                        animLoading.visibility = View.GONE
                         Log.i(TAG, "offlineState: ${it.weatherList.size}")
                     }
                     else -> { }//Still loading
@@ -106,6 +109,9 @@ class FavoriteFragment : Fragment()
         binding = FragmentFavoriteBinding.bind(view)
         favViewModel = ViewModelProvider(this).get(FavViewModel::class.java)
         navController = Navigation.findNavController(requireActivity(),R.id.dashBoardContainer)
+        animLoading = view.findViewById(R.id.animationLogo2)
+
+
 
     }
     fun addBtnClicked() {
@@ -143,7 +149,9 @@ class FavoriteFragment : Fragment()
 
                 when (it) {
                     is DBState.onFail -> { } //hide loader show alert
-                    is DBState.onSuccessList -> { favAdapter.setWeatherList(it.weatherList) }
+                    is DBState.onSuccessList -> {
+                        animLoading.visibility = View.GONE
+                        favAdapter.setWeatherList(it.weatherList) }
                     else -> { }//Still loading
                 }
                 favAdapter.notifyDataSetChanged()

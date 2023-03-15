@@ -65,6 +65,12 @@
     <string name="permissionTitle">الإذن مطلوب</string>
     <string name="connectToUse">اتصل بالإنترنت لاستخدام هذه الميزة</string>
 
+    <string name="F">"°ف"</string>
+    <string name="mh">"م/س"</string>
+    <string name="K">"°ك"</string>
+    <string name="ms">"م/ث"</string>
+    <string name="C">"°س"</string>
+
 
 
 </resources>
